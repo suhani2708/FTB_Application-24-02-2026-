@@ -1,0 +1,2795 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTB - Model Library</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: #f8f9fa;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 260px;
+        background: linear-gradient(135deg, #ff7b00 0%, #f89233 100%);
+        padding: 30px 0;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .logo-container {
+        margin: 10px 0 3px;
+        text-align: center;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        height: auto !important;
+      }
+      .logo-container img {
+        width: 190px;
+        height: auto;
+        max-height: 190px;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;
+        background: none;
+        padding: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+      }
+      .title-group {
+        text-align: center;
+        margin-bottom: 25px;
+        width: 100%;
+        padding: 0 20px;
+      }
+      .title-group h2 {
+        color: white;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .title-group p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 5px 0 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .menu {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        margin: 0;
+      }
+      .menu li {
+        margin-bottom: 5px;
+      }
+      .menu a {
+        display: flex;
+        align-items: center;
+        padding: 12px 25px;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        width: 100%;
+        box-sizing: border-box;
+        border-left: 4px solid transparent;
+      }
+      .menu a:hover,
+      .menu a.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-left: 4px solid white;
+      }
+      .menu a i {
+        margin-right: 15px;
+        font-size: 18px;
+        width: 25px;
+        text-align: center;
+      }
+      .main-content {
+        margin-left: 260px;
+        padding: 30px;
+      }
+      .header {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+      .header h1 {
+        color: #2d3748;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .header p {
+        color: #718096;
+        font-size: 14px;
+      }
+      .search-filter {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filter-box {
+        flex: 1;
+        min-width: 300px;
+      }
+      .filter-box label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 5px;
+        color: #718096;
+      }
+      .filter-box select {
+        width: 100%;
+        padding: 14px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 15px;
+        font-family: "Poppins", sans-serif;
+        background: white;
+        appearance: auto;
+      }
+      .models-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+      }
+      .model-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .model-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .model-header {
+        background: linear-gradient(135deg, #ff7b00 0%, #f89233 100%);
+        padding: 30px 25px;
+        text-align: center;
+        color: white;
+      }
+      .model-header i {
+        font-size: 48px;
+        margin-bottom: 15px;
+        opacity: 0.9;
+      }
+      .model-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .model-body {
+        padding: 25px;
+      }
+      .files-list h4 {
+        color: #2d3748;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .files-list h4::after {
+        content: "▼";
+        font-size: 10px;
+        color: #718096;
+        transition: transform 0.3s ease;
+      }
+      .files-list h4.open::after {
+        transform: rotate(180deg);
+      }
+      .file-list-container {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+      }
+      .file-list-container.show {
+        max-height: 500px;
+      }
+      .file-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        min-height: 50px;
+        cursor: pointer; /* Visual cue: shows hand on hover */
+      }
+      .file-item:hover:not(.disabled) {
+        border-color: #e67e22;
+        background: rgba(102, 126, 234, 0.05);
+      }
+      .file-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+      .file-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 16px;
+      }
+      .file-icon.mod {
+        background: rgba(52, 152, 219, 0.1);
+        color: #e67e22;
+      }
+      .file-icon.ppt {
+        background: rgba(230, 126, 34, 0.1);
+        color: #e67e22;
+      }
+      .file-icon.excel {
+        background: rgba(46, 204, 113, 0.1);
+        color: #e4a11a;
+      }
+      .file-icon.app {
+        background: rgba(155, 89, 182, 0.1);
+        color: #e67e22;
+      }
+      .file-icon.vba {
+        background: rgba(52, 73, 94, 0.1);
+        color: #fb9b00;
+      }
+      .file-icon.pdf {
+        background: rgba(220, 50, 50, 0.1);
+        color: #ff7a00;
+      }
+      .file-name {
+        font-size: 13px;
+        color: #2d3748;
+        font-weight: 500;
+        word-break: break-word;
+        max-width: 200px;
+        line-height: 1.3;
+      }
+      .download-btn {
+        padding: 6px 12px;
+        background: rgba(102, 126, 234, 0.1);
+        color: #e67e22;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        margin-left: 10px;
+      }
+      .download-btn:hover:not(.disabled) {
+        background: #e67e22;
+        color: white;
+      }
+      .download-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .model-card.hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="logo-container">
+        <img
+          src="{{ url_for('static', filename='Nividnewlogo.png') }}"
+          alt="Nivid Logo"
+        />
+      </div>
+      <div class="title-group">
+        <h2 style="text-align: center; margin: 0; color: white">FTB</h2>
+        <p
+          style="
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin-top: 5px;
+          "
+        >
+          Faculty Tool Box
+        </p>
+      </div>
+      <ul class="menu">
+        <li>
+          <a href="Student_Dashboard.html"
+            ><i class="fas fa-home"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="Model_Library.html" class="active"
+            ><i class="fas fa-cube"></i> Model Library</a
+          >
+        </li>
+        <li>
+          <a href="My_Notes_Student.html"
+            ><i class="fas fa-sticky-note"></i> My Notes</a
+          >
+        </li>
+        <li>
+          <a href="/student/exercises"
+            ><i class="fas fa-clipboard-list"></i> Exercise Library</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://exam.nivid.co.in/auth/login.php"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><i class="fas fa-cog"></i>Give Exam</a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="header">
+        <h1>Model Library</h1>
+        <p>Explore Practical,industry-ready models for experiential learning</p>
+      </div>
+      <div class="search-filter">
+        <div class="filter-box">
+          <label for="categoryFilter">Model Library and Model List</label>
+          <select id="categoryFilter">
+            <option value="">All Models</option>
+            <option value="Resource Planning">Critical Path Method</option>
+            <option value="Healthcare Operations">
+              Hospital Resources Planning
+            </option>
+            <option value="Logistics Network">Inventory Planning</option>
+            <option value="International Logistics">Johnson_s Rule</option>
+            <option value="Just-In-Time Systems">Just In Time (JIT)</option>
+            <option value="Process Flow">Layout Planning</option>
+            <option value="Process Improvement">Lean Manufacturing</option>
+            <option value="Production Optimization">Line Balancing</option>
+            <option value="Logistics &amp; Distribution">
+              Logistics Planning
+            </option>
+            <option value="Preventive Maintenance">Maintenance Planning</option>
+            <option value="Material Control">
+              Material Control Techniques
+            </option>
+            <option value="Material Requirements">
+              Material Requirements Planning
+            </option>
+            <option value="Production Scheduling">Production Scheduling</option>
+            <option value="Project Evaluation Review Technique">
+              Project Evaluation Review Technique
+            </option>
+            <option value="Queuing Theory">Queuing Theory</option>
+            <option value="Reliability Engineering">
+              Reliability Engineering
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="models-grid" id="modelsGrid">
+        <!-- All 15 model cards -->
+        <!-- CPM_PERT -->
+        <div
+          class="model-card"
+          data-name="Critical Path Method"
+          data-category="Resource Planning"
+        >
+          <div class="model-header">
+            <i class="fas fa-chart-bar"></i>
+            <h3>Critical Path Method</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Critical Path Method/Model_Critical_Path_Method.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Critical_Path_Method.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Critical Path Method.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Critical Path Method/Model_Critical_Path_Method.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Critical Path Method/ProblemStatement_Critical_Path_Method.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Critical_Path_Method.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Critical Path Method.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Critical Path Method/ProblemStatement_Critical_Path_Method.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Critical Path Method/RunControl_Critical_Path_Method.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Critical_Path_Method.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Critical Path Method.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Critical Path Method/RunControl_Critical_Path_Method.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Critical_Path_Method.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Critical Path Method/User_Manual_Faculty_Critical_Path_Method.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Critical_Path_Method.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Critical Path Method.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Critical Path Method/User_Manual_Faculty_Critical_Path_Method.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Hospital Resources Planning -->
+        <div
+          class="model-card"
+          data-name="Hospital Resources Planning"
+          data-category="Healthcare Operations"
+        >
+          <div class="model-header">
+            <i class="fas fa-chart-bar"></i>
+            <h3>Hospital Resources Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Hospital Resource Planning/Model_Hospital_Resource_Planning.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Hospital_Resource_Planning.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Hospital Resource Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Hospital Resource Planning/Model_Hospital_Resource_Planning.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Hospital Resource Planning/User_Manual_Faculty_Hospital_Resource_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Hospital_Resource_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Hospital Resource Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Hospital Resource Planning/User_Manual_Faculty_Hospital_Resource_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Hospital Resource Planning/RunControl_Hospital_Resource_Planning.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Hospital_Resource_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Hospital Resource Planning.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Hospital Resource Planning/RunControl_Hospital_Resource_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Hospital_Resource_Planning.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Hospital Resource Planning/ProblemStatement_Hospital_Resource_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Hospital_Resource_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Hospital Resource Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Hospital Resource Planning/ProblemStatement_Hospital_Resource_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Inventory Planning -->
+        <div
+          class="model-card"
+          data-name="Inventory Planning"
+          data-category="Logistics Network"
+        >
+          <div class="model-header">
+            <i class="fas fa-truck"></i>
+            <h3>Inventory Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Inventory Planning/Model_Inventory_Planning.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Inventory_Planning.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Inventory Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Inventory Planning/Model_Inventory_Planning.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Inventory Planning/ProblemStatement_Inventory_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Inventory_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Inventory Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Inventory Planning/ProblemStatement_Inventory_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Inventory Planning/RunControl_Inventory_Planning.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Inventory_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Inventory Planning xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Inventory Planning/RunControl_Inventory_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Inventory_Planning.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Inventory Planning/User_Manual_Faculty_Inventory_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Inventory_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Inventory Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Inventory Planning/User_Manual_Faculty_Inventory_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Johnson_s Rule -->
+        <div
+          class="model-card"
+          data-name="Johnson_s Rule"
+          data-category="International Logistics"
+        >
+          <div class="model-header">
+            <i class="fas fa-globe"></i>
+            <h3>Johnson_s Rule</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="openFile('Johnson_s Rule/Model_Jhonsons_Rule.mod')"
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Jhonsons_Rule.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Jhonsons Rule.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Johnson_s Rule/Model_Jhonsons_Rule.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name">AdvExpt_Jhonson's_Rule.wexp</span>
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Johnson_s Rule/RunControl_Johnsons_Rule.xlsm')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name">RunControl_Johnsons_Rule.xlsm</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Johnsons Rule.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Johnson_s Rule/RunControl_Johnsons_Rule.xlsm');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Johnson_s Rule/ProblemStatement_Jhonson_s_Rule.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Jhonson_s_Rule.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Jhonson s Rule.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Johnson_s Rule/ProblemStatement_Jhonson_s_Rule.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Johnson_s Rule/User_Manual_Faculty_Jhonson_s_Rule.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Jhonson_s_Rule.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Jhonson s Rule.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Johnson_s Rule/User_Manual_Faculty_Jhonson_s_Rule.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Just In Time (JIT) -->
+        <div
+          class="model-card"
+          data-name="Just In Time (JIT)"
+          data-category="Just-In-Time Systems"
+        >
+          <div class="model-header">
+            <i class="fas fa-sync-alt"></i>
+            <h3>Just In Time (JIT)</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Just In Time (JIT)/Model_Just_In_Time.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Just_In_Time.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Just In Time.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Just In Time (JIT)/Model_Just_In_Time.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Just In Time (JIT)/User_Manual_Just_in_Time.pdf')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name">User_Manual_Just_in_Time.pdf</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Just in Time.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Just In Time (JIT)/User_Manual_Just_in_Time.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Just In Time (JIT)/RunControl_Just_In_Time.xlsm')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name">RunControl_Just_In_Time.xlsm</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Just In Time.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Just In Time (JIT)/RunControl_Just_In_Time.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name">AdvExpt_Just_In_Time.wexp</span>
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Just In Time (JIT)/ProblemStatement_Just_in_Time.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Just_in_Time.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Just in Time.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Just In Time (JIT)/ProblemStatement_Just_in_Time.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Layout Planning -->
+        <div
+          class="model-card"
+          data-name="Layout Planning"
+          data-category="Process Flow"
+        >
+          <div class="model-header">
+            <i class="fas fa-project-diagram"></i>
+            <h3>Layout Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Layout Planning/Model_Layout_Planning.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Layout_Planning.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Layout Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Layout Planning/Model_Layout_Planning.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Layout Planning/User_Manual_Faculty_Layout_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Layout_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Layout Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Layout Planning/User_Manual_Faculty_Layout_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Layout Planning/RunControl_Layout_Planning.xlsm')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Layout_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Layout Planning xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Layout Planning/RunControl_Layout_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name">AdvExpt_Layout_Planning.wexp</span>
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Layout Planning/ProblemStatement_Layout_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Layout_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Layout Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Layout Planning/ProblemStatement_Layout_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Lean Manufacturing -->
+        <div
+          class="model-card"
+          data-name="Lean Manufacturing"
+          data-category="Process Improvement"
+        >
+          <div class="model-header">
+            <i class="fas fa-leaf"></i>
+            <h3>Lean Manufacturing</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Lean Manufacturing/Model_Lean_Manufacturing.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Lean_Manufacturing.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Lean Manufacturing.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Lean Manufacturing/Model_Lean_Manufacturing.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Lean Manufacturing/User_Manual_Lean_Manufacturing.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Lean_Manufacturing.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Lean Manufacturing.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Lean Manufacturing/User_Manual_Lean_Manufacturing.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Lean_Manufacturing.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Lean Manufacturing/RunControl_Lean_Manufacturing.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Lean_Manufacturing.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Lean Manufacturing xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Lean Manufacturing/RunControl_Lean_Manufacturing.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Lean Manufacturing/ProblemStatement_Lean_Manufacturing.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Lean_Manufacturing.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Lean Manufacturing.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Lean Manufacturing/ProblemStatement_Lean_Manufacturing.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Line Balancing -->
+        <div
+          class="model-card"
+          data-name="Line Balancing"
+          data-category="Production Optimization"
+        >
+          <div class="model-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Line Balancing</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="openFile('Line Balancing/Model_Line_Balancing.mod')"
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Line_Balancing.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Line Balancing.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Line Balancing/Model_Line_Balancing.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Line Balancing/User_Manual_Faculty_Line_Balancing.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Line_Balancing.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Line Balancing.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Line Balancing/User_Manual_Faculty_Line_Balancing.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Line Balancing/RunControl_Line_Balancing.xlsm')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Line_Balancing.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Line Balancing.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Line Balancing/RunControl_Line_Balancing.xlsm');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Line Balancing/ProblemStatement_Line_Balancing.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Line_Balancing.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Line Balancing.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Line Balancing/ProblemStatement_Line_Balancing.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name">AdvExpt_Line_Balancing.wexp</span>
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Logistics Planning -->
+        <div
+          class="model-card"
+          data-name="Logistics Planning"
+          data-category="Logistics &amp; Distribution"
+        >
+          <div class="model-header">
+            <i class="fas fa-truck"></i>
+            <h3>Logistics Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Logistics Planning/Model_Logistics_Planning.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Logistics_Planning.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Logistics Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Logistics Planning/Model_Logistics_Planning.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Logistics Planning/User_Manual_Logistics_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Logistics_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Logistics Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Logistics Planning/User_Manual_Logistics_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Logistics Planning/RunControl_Logistics_Planning.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Logistics_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="RunControl Logistics Planning.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Logistics Planning/RunControl_Logistics_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_logistics_planning.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Logistics Planning/ProblemStatement_Logistics_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Logistics_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Logistics Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Logistics Planning/ProblemStatement_Logistics_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Maintenance Planning -->
+        <div
+          class="model-card"
+          data-name="Maintenance Planning"
+          data-category="Preventive Maintenance"
+        >
+          <div class="model-header">
+            <i class="fas fa-wrench"></i>
+            <h3>Maintenance Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Maintenance Planning/Model_Maintenance_Planning.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Maintenance_Planning.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Maintenance Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Maintenance Planning/Model_Maintenance_Planning.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Maintenance Planning/ProblemStatement_Maintenance_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Maintenance_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Maintenance Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Maintenance Planning/ProblemStatement_Maintenance_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Maintenance Planning/RunControl_Maintenance_Planning.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Maintenance_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Maintenance Planning.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Maintenance Planning/RunControl_Maintenance_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Maintenance_Planning.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Maintenance Planning/User_Manual_Faculty_Maintenance_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Maintenance_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Maintenance Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Maintenance Planning/User_Manual_Faculty_Maintenance_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Material Control Techniques -->
+        <div
+          class="model-card"
+          data-name="Material Control Techniques"
+          data-category="Material Control"
+        >
+          <div class="model-header">
+            <i class="fas fa-cogs"></i>
+            <h3>Material Control Techniques</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Control Techniques/Model_Material_Control_Techniques.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Material_Control_Techniques.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Material Control Techniques.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Control Techniques/Model_Material_Control_Techniques.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Control Techniques/User_Manual_Faculty_Material_Control_Techniques.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Maintenance_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Maintenance Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Control Techniques/User_Manual_Faculty_Material_Control_Techniques.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Control Techniques/RunControl_Material_Control_Techniques.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Material_Control_Techniques.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Material Control Techniques.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Control Techniques/RunControl_Material_Control_Techniques.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Material_Control_Techniques.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Control Techniques/ProblemStatement_Material_Control_Techniques.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Material_Control_Techniques.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement_Material_Control_Techniques.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Control Techniques/ProblemStatement_Material_Control_Techniques.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Material Requirements Planning -->
+        <div
+          class="model-card"
+          data-name="Material Requirements Planning"
+          data-category="Material Requirements"
+        >
+          <div class="model-header">
+            <i class="fas fa-cogs"></i>
+            <h3>Material Requirements Planning</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Requirements Planning (MRP)/Model_Material_Requirements_Planning.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Material_Requirements_Planning.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Material Requirements Planning.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Requirements Planning (MRP)/Model_Material_Requirements_Planning.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Requirements Planning (MRP)/User_Manual_Material_Requirements_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Material_Requirements_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Material Requirements Planning.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Requirements Planning (MRP)/User_Manual_Material_Requirements_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Material_Requirements_Planning.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Requirements Planning (MRP)/RunControl_Material_Requirements_Planning.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Material_Requirements_Planning.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Material Requirements Planning.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Requirements Planning (MRP)/RunControl_Material_Requirements_Planning.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Material Requirements Planning (MRP)/ProblemStatement_Material_Requirements_Planning.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Material_Requirements_Planning.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Problem Statement Maintenance Planning.docx"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Material Requirements Planning (MRP)/ProblemStatement_Material_Requirements_Planning.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Production Scheduling -->
+        <div
+          class="model-card"
+          data-name="Production Scheduling"
+          data-category="Production Scheduling"
+        >
+          <div class="model-header">
+            <i class="fas fa-calendar-alt"></i>
+            <h3>Production Scheduling</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Production Scheduling/Model_Production_Scheduling.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Production_Scheduling.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Production Scheduling.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Production Scheduling/Model_Production_Scheduling.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Production Scheduling/User_Manual_faculty_Production_Scheduling.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_faculty_Production_Scheduling.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual faculty Production Scheduling.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Production Scheduling/User_Manual_faculty_Production_Scheduling.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Production Scheduling/RunControl_Production_Scheduling.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >Runcontrol_Production_Scheduling.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Production Scheduling.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Production Scheduling/RunControl_Production_Scheduling.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Production_Scheduling.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Production Scheduling/ProblemStatement_Production_Scheduling.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Production_Scheduling.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Production Scheduling.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Production Scheduling/ProblemStatement_Production_Scheduling.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Project Evaluation Review Technique -->
+        <div
+          class="model-card"
+          data-name="Project Evaluation Review Technique"
+          data-category="Project Evaluation Review Technique"
+        >
+          <div class="model-header">
+            <i class="fas fa-project-diagram"></i>
+            <h3>Project Evaluation Review Technique</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Project Evaluation Review Technique/Model_Project_Evaluation_Review_Technique.mod',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Project_Evaluation_Review_Technique.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Project Evaluation Review Technique/Model_Project_Evaluation_Review_Technique.mod',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Project Evaluation Review Technique/ProblemStatement_Project_Evaluation_Review_Technique.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon pdf" style="color: #ff7a00">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Project_Evaluation_Review_Technique.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Project Evaluation Review Technique/ProblemStatement_Project_Evaluation_Review_Technique.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Project Evaluation Review Technique/RunControl_Project_Evaluation_Review_Technique.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Project_Evaluation_Review_Technique.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Project Evaluation Review Technique/RunControl_Project_Evaluation_Review_Technique.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Project Evaluation Review Technique/User_Manual_Project_Evaluation_Review_Technique.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt" style="color: #e34f26">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Project_Evaluation_Review_Technique.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Project Evaluation Review Technique/User_Manual_Project_Evaluation_Review_Technique.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Project_Evaluation_Review_Technique.wexp</span
+                    >
+                  </div>
+                  <button class="download-btn disabled">🚫</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Queuing Theory -->
+        <div
+          class="model-card"
+          data-name="Queuing Theory"
+          data-category="Queuing Theory"
+        >
+          <div class="model-header">
+            <i class="fas fa-users"></i>
+            <h3>Queuing Theory</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="openFile('Queuing Theory/Model_Queuing_Theory.mod')"
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name">Model_Queuing_Theory.mod</span>
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Queuing Theory.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Queuing Theory/Model_Queuing_Theory.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Queuing Theory/User_Manual_Queuing_Theory.pdf')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Queuing_Theory.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Queuing Theory.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Queuing Theory/User_Manual_Queuing_Theory.pdf');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Queuing Theory/RunControl_Queuing_Theory.xlsm')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >Runcontrol_Queuing_Theory.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Queuing Theory.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Queuing Theory/RunControl_Queuing_Theory.xlsm');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name">AdvExpt_Queuing_Theory.wexp</span>
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Queuing Theory/ProblemStatement_Queuing_Theory.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon vba">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Queuing_Theory.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement Queuing Theory.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Queuing Theory/ProblemStatement_Queuing_Theory.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Reliability -->
+        <div
+          class="model-card"
+          data-name="Reliability Engineering"
+          data-category="Reliability Engineering"
+        >
+          <div class="model-header">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Reliability Engineering</h3>
+          </div>
+          <div class="model-body">
+            <div class="files-list">
+              <h4 class="dropdown-toggle">Included Files:</h4>
+              <div class="file-list-container">
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile('Reliability/Model_Reliability_Engineering.mod')
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon mod">
+                      <i class="fas fa-file-code"></i>
+                    </div>
+                    <span class="file-name"
+                      >Model_Reliability_Engineering.mod</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Model Reliability.mod"
+                    onclick="
+                      event.stopPropagation();
+                      openFile('Reliability/Model_Reliability_Engineering.mod');
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Reliability/User_Manual_Faculty_Reliability_Engineering.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-powerpoint"></i>
+                    </div>
+                    <span class="file-name"
+                      >User_Manual_Faculty_Reliability_Engineering.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="User Manual Faculty Reliability Engineering.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Reliability/User_Manual_Faculty_Reliability_Engineering.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Reliability/RunControl_Reliability_Engineering.xlsm',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon excel">
+                      <i class="fas fa-file-excel"></i>
+                    </div>
+                    <span class="file-name"
+                      >RunControl_Reliability_Engineering.xlsm</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="Runcontrol Reliability.xlsm"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Reliability/RunControl_Reliability_Engineering.xlsm',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+                <div class="file-item">
+                  <div class="file-info">
+                    <div class="file-icon app">
+                      <i class="fas fa-desktop"></i>
+                    </div>
+                    <span class="file-name"
+                      >AdvExpt_Reliability_Engineering.wexp</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn disabled"
+                    title="This file type is not directly accessible"
+                  >
+                    🚫
+                  </button>
+                </div>
+                <div
+                  class="file-item"
+                  onclick="
+                    openFile(
+                      'Reliability/ProblemStatement_Reliability_Engineering.pdf',
+                    )
+                  "
+                >
+                  <div class="file-info">
+                    <div class="file-icon ppt">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="file-name"
+                      >ProblemStatement_Reliability_Engineering.pdf</span
+                    >
+                  </div>
+                  <button
+                    class="download-btn"
+                    title="ProblemStatement_Reliability_Engineering.pdf"
+                    onclick="
+                      event.stopPropagation();
+                      openFile(
+                        'Reliability/ProblemStatement_Reliability_Engineering.pdf',
+                      );
+                    "
+                  >
+                    ↱
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function openFile(fileName) {
+        fetch("/api/launch_file", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file_path: fileName }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) {
+              alert("File open failed: " + (data.error || "Unknown error"));
+            }
+          })
+          .catch((err) => {
+            console.error("Launch error:", err);
+            alert("Error launching file.");
+          });
+      }
+
+      function downloadFile(fileName) {
+        window.open(
+          "/api/download_file/" + encodeURIComponent(fileName),
+          "_blank",
+        );
+      }
+
+      document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
+        toggle.addEventListener("click", function () {
+          this.classList.toggle("open");
+          this.nextElementSibling.classList.toggle("show");
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const categoryFilter = document.getElementById("categoryFilter");
+        if (!categoryFilter) return;
+
+        const modelsGrid = document.getElementById("modelsGrid");
+        const cards = Array.from(modelsGrid.querySelectorAll(".model-card"));
+
+        function filterModels() {
+          const category = categoryFilter.value;
+          cards.forEach((card) => {
+            const cardCategory = card.dataset.category;
+            card.classList.toggle(
+              "hidden",
+              category && cardCategory !== category,
+            );
+          });
+        }
+
+        categoryFilter.addEventListener("change", filterModels);
+        filterModels();
+
+        // Sort file items alphabetically (FIXED)
+        document
+          .querySelectorAll(".file-list-container")
+          .forEach((container) => {
+            const items = Array.from(container.querySelectorAll(".file-item"));
+
+            items.sort((a, b) => {
+              const aName = a
+                .querySelector(".file-name")
+                .textContent.trim()
+                .toLowerCase();
+              const bName = b
+                .querySelector(".file-name")
+                .textContent.trim()
+                .toLowerCase();
+              return aName.localeCompare(bName);
+            });
+
+            container.innerHTML = "";
+            items.forEach((item) => container.appendChild(item));
+          });
+      });
+    </script>
+  </body>
+</html>

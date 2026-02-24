@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTB - Exercises</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            padding: 30px 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo-container {
+        margin: 10px 0 3px;
+        text-align: center;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        height: auto !important;
+    }
+    .logo-container img {
+        width: 190px;
+        height: auto;
+        max-height: 190px;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;
+        background: none;
+        padding: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+    }
+        .title-group {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        .title-group h2 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .title-group p {
+            color: rgba(255,255,255,0.9);
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .menu {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            margin: 0;
+        }
+        .menu li {
+            margin-bottom: 5px;
+        }
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            box-sizing: border-box;
+            border-left: 4px solid transparent;
+        }
+        .menu a:hover, .menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+        .menu a i {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 25px;
+            text-align: center;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #718096;
+            font-size: 14px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-box .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+        .stat-box .icon.total {
+            background: rgba(102, 126, 234, 0.1);
+            color: #e67e22;
+        }
+        .stat-box .icon.pending {
+            background: rgba(230, 126, 34, 0.1);
+            color: #e67e22;
+        }
+        .stat-box .icon.completed {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+        .stat-box .icon.overdue {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        .stat-box h3 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .stat-box p {
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #718096;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover, .tab-btn.active {
+            border-color: #e67e22;
+            color: #e67e22;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        .assignments-list {
+            display: grid;
+            gap: 20px;
+        }
+        .assignment-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 5px solid #e67e22;
+            cursor: pointer;
+        }
+        .assignment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .assignment-title {
+            flex: 1;
+        }
+        .assignment-title h3 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .assignment-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: #718096;
+            font-size: 13px;
+        }
+        .meta-item i {
+            margin-right: 8px;
+            color: #e67e22;
+        }
+        .exercise-dropdown {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            display: none;
+        }
+        .exercise-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+        .exercise-info span {
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .file-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            color: #e67e22;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .file-link:hover {
+            background: #e67e22;
+            color: white;
+            border-color: #e67e22;
+        }
+        .file-link i {
+            margin-right: 6px;
+            font-size: 14px;
+        }
+        .dropdown-toggle {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #718096;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .dropdown-toggle:hover {
+            color: #e67e22;
+        }
+        .filter-tabs {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .filter-dropdown {
+            position: relative;
+            width: 100%;
+        }
+         .filter-tabs select {
+            width: 100%;
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color:  #000000;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            outline: none;
+            display: block;
+        }
+        .filter-tabs select:focus {
+            border-color: #cbd5e0;
+            box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.1);
+        }
+        .filter-dropdown::after {
+            content: "▼";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            pointer-events: none;
+            color: #718096;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .filter-tabs select:hover {
+            border-color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='Nividnewlogo.png') }}" alt="Nivid Logo">
+        </div>
+        <div class="title-group">
+            <h2 style="text-align: center; vertical-align: middle; margin: 0; color: white;">FTB</h2>
+            <p style="text-align: center; vertical-align: middle; margin: 0 0 0 8px; font-size: 16px; color: white;">Faculty Tool Box</p>
+        </div>
+        <ul class="menu">
+            <li><a href="Student_Dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="Model_Library.html"><i class="fas fa-cube"></i> Model Library</a></li>
+            <li><a href="My_Notes_Student.html"><i class="fas fa-sticky-note"></i> My Notes</a></li>
+            <li><a href="/student/exercises" class="active"><i class="fas fa-clipboard-list"></i> Exercise Library</a></li>
+           <li><a href="https://exam.nivid.co.in/auth/login.php" target="_blank" rel="noopener noreferrer"><i class="fas fa-cog"></i>Give Exam</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Exercises</h1>
+            <p>View Exercises for Hands-On Practice</p>
+        </div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="icon total">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>15</h3>
+                <p>Total Exercises</p>
+            </div>
+        </div>
+        <div class="filter-tabs">
+            <div class="filter-dropdown">
+                <select id="categoryFilter" onchange="filterAssignments()">
+                    <option value="">All Models</option>
+                    <option value="Critical Path Method">Critical Path Method & Project Evaluation Review Technique</option>
+                    <option value="Hospital Resource Planning">Hospital Resource Planning</option>
+                    <option value="Inventory Planning">Inventory Planning</option>
+                    <option value="Johnson's Rule">Johnson's Rule</option>
+                    <option value="Just In Time (JIT)">Just In Time (JIT)</option>
+                    <option value="Layout Planning">Layout Planning</option>
+                    <option value="Lean Manufacturing">Lean Manufacturing</option>
+                    <option value="Line Balancing">Line Balancing</option>
+                    <option value="Logistics Planning">Logistics Planning</option>
+                    <option value="Maintenance Planning">Maintenance Planning</option>
+                    <option value="Material Control Techniques">Material Control Techniques</option>
+                    <option value="Material Requirements Planning">Material Requirements Planning</option>
+                    <option value="Production Scheduling">Production Scheduling</option>
+                    <option value="Queuing Theory">Queuing Theory</option>
+                    <option value="reliability">Reliability Engineering</option>
+                </select>
+            </div>
+        </div>
+        <div class="assignments-list">
+            <!-- Critical Path Method & Project Evaluation Review Technique -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'critical_path')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Critical Path Method & Project Evaluation Review Technique</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Critical Path Method & Project Evaluation Review Technique</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'critical_path')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="critical_path" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Critical Path Method & Project Evaluation Review Technique</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Critical Path Method/Step-by-step_Student_Simplified_Critical_Path_Method&Project_Evaluation_Review_Technique.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Critical_Path_Method&Project_Evaluation_Review_Technique.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Resource Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'hospital_resource')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Hospital Resource Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Hospital Resource Planning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'hospital_resource')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="hospital_resource" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Hospital Resource Planning</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Hospital Resource Planning/Step-by-step_Student_Simplified_Hospital_Resource_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Hospital_Resource_Planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Line Balancing -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'line_balancing')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Line Balancing</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Line Balancing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'line_balancing')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="line_balancing" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Line Balancing Analysis</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Line Balancing/Step-by-step_Student_Simplified_Line_Balancing.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Line_Balancing.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'inventory_planning')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Inventory Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Inventory Planning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'inventory_planning')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="inventory_planning" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Network Design</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Inventory Planning/Step-by-Step_Student_Simplified_Inventory_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Inventory_planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Requirements Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'mrp')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Material Requirements Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>MRP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'mrp')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="mrp" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: MRP Calculation</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Material Requirements Planning (MRP)/Step-by-step_Student_Simplified_Material_Requirements_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Material_Requirements_Planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Johnson's Rule -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'johnsons_rule')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Johnson's Rule</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Johnson's Rule</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'johnsons_rule')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="johnsons_rule" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Johnson's Rule</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Johnson_s Rule/Step-by-step_Student_Simplified_Jhonson_s_Rule.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Jhonson_s_Rule.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reliability -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'reliability')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Reliability</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Reliability</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'reliability')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="reliability" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Reliability</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Reliability/Step-by-Step_Student_Simplified_Reliability_Engineering.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-Step_Student_Simplified_Reliability_Engineering.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Just In Time (JIT) -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'jit')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Just In Time (JIT)</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>JIT</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'jit')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="jit" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: JIT Calculation</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Just In Time (JIT)/Step-by-step_Student_Simplified_Just_in_Time.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Just_in_Time.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layout Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'layout_planning')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Layout Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Layout Planning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'layout_planning')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="layout_planning" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Layout Planning</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Layout Planning/Step-by-Step_Student_Simplified_Layout_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i>Step-by-Step_Student_Simplified_Layout_Planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lean Manufacturing -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'lean_manufacturing')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Lean Manufacturing</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Lean Manufacturing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'lean_manufacturing')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="lean_manufacturing" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Lean Manufacturing</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Lean Manufacturing/Step-by-step_Student_Simplified_Lean_Manufacturing.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Lean_Manufacturing.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logistics Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'logistics_planning')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Logistics Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Logistics Planning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'logistics_planning')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="logistics_planning" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Logistics Planning</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Logistics Planning/Step-by-step_Student_Simplified_Logistics_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Logistics_Planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Planning -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'maintenance_planning')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Maintenance Planning</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Maintenance Planning</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'maintenance_planning')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="maintenance_planning" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Maintenance Planning</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Maintenance Planning/Step-by-Step_Student_Simplified_Maintenance_Planning.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-Step_Student_Simplified_Maintenance_Planning.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Material Control Techniques -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'material_control')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Material Control Techniques</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Material Control Techniques</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'material_control')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="material_control" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Material Control Techniques</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Material Control Techniques/Step-by-Step_Student_Simplified_Material_Control_Techniques.pdf')">
+                            <i class="fas fa-file-pdf"></i>Step-by-Step_Student_Simplified_Material_Control_Techniques.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Scheduling -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'production_scheduling')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Production Scheduling</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Production Scheduling</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'production_scheduling')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="production_scheduling" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Production Scheduling</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Production Scheduling/Step-by-step_Student_Simplified_Production_Scheduling.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Production_Scheduling.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Queuing Theory -->
+            <div class="assignment-card" onclick="toggleDropdown(event, 'queuing_theory')">
+                <div class="assignment-header">
+                    <div class="assignment-title">
+                        <h3>Queuing Theory</h3>
+                        <div class="assignment-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>Queuing Theory</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(event, 'queuing_theory')">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="queuing_theory" class="exercise-dropdown">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <span>Exercise: Queuing Theory</span>
+                        </div>
+                        <a href="#" class="file-link" onclick="event.stopPropagation(); openExerciseFile('Queuing Theory/Step-by-step_Student_Simplified_Queuing_Theory.pdf')">
+                            <i class="fas fa-file-pdf"></i> Step-by-step_Student_Simplified_Queuing_Theory.pdf
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function openExerciseFile(fileName) {
+        console.log('Opening exercise file:', fileName);
+
+        fetch('/api/launch_file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                file_path: fileName,
+                module_id: 'exercise'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('File opened successfully');
+            } else {
+                console.error('Error opening file:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    }
+
+
+
+    function toggleDropdown(event, id) {
+        const dropdown = document.getElementById(id);
+        if (!dropdown) return;
+
+        dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+
+        openCard(event);
+    }
+    function openCard(event) {
+        const card = event.target.closest('.assignment-card');
+        if (!card) return;
+
+        card.classList.toggle('open');
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.assignment-card').forEach(card => {
+            card.addEventListener('click', openCard);
+        });
+    });
+    const container = document.querySelector('.assignments-list');
+    const cards = Array.from(container.children);
+
+    cards.sort((a, b) => {
+        const titleA = a.querySelector('h3').textContent.trim().toLowerCase();
+        const titleB = b.querySelector('h3').textContent.trim().toLowerCase();
+        return titleA.localeCompare(titleB);
+    });
+
+    cards.forEach(card => container.appendChild(card));
+    function filterAssignments() {
+        const filterValue = document.getElementById('categoryFilter').value.toLowerCase();
+        const assignmentCards = document.querySelectorAll('.assignment-card');
+
+        assignmentCards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const tags = card.querySelector('.meta-item span').textContent.toLowerCase();
+
+            if (filterValue === '' || title.includes(filterValue) || tags.includes(filterValue)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

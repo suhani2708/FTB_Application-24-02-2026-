@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTB - Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            padding: 30px 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo-container {
+        margin: 10px 0 3px;
+        text-align: center;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        height: auto !important;
+        }
+        .logo-container img {
+        width: 190px;
+        height: auto;
+        max-height: 190px;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;
+        background: none;
+        padding: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+        }
+        .title-group {
+            text-align: center;
+            margin-bottom: 25px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        .title-group h2 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .title-group p {
+            color: rgba(255,255,255,0.9);
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .menu {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            margin: 0;
+        }
+        .menu li {
+            margin-bottom: 5px;
+        }
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            box-sizing: border-box;
+            border-left: 4px solid transparent;
+        }
+
+        .menu a:hover, .menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .menu a i {
+         margin-right: 15px;
+         font-size: 18px;
+         width: 25px;
+         text-align: center;
+        }
+
+        .main-content {
+         margin-left: 260px;
+         padding: 30px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-details h4 {
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon.purple {
+            background: rgba(102, 126, 234, 0.1);
+            color: #ff9933;
+        }
+
+        .stat-icon.blue {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .stat-icon.green {
+            background: rgba(46, 204, 113, 0.1);
+            color: #ff9933;
+        }
+
+        .stat-icon.orange {
+            background: rgba(230, 126, 34, 0.1);
+            color: #ff9933;
+        }
+
+        .stat-card h3 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h2 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .view-all {
+            color: #e67e22;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .model-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .model-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .model-item:hover {
+            border-color: #e67e22;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .model-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #e67e22;
+        }
+
+        .model-info h4 {
+            color: #2d3748;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .model-info p {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        .activity-icon.purple {
+            background: rgba(102, 126, 234, 0.1);
+            color: #e67e22;
+        }
+
+        .activity-icon.green {
+            background: rgba(46, 204, 113, 0.1);
+            color: #e67e22;
+        }
+
+        .activity-icon.orange {
+            background: rgba(230, 126, 34, 0.1);
+            color: #e67e22;
+        }
+
+        .activity-content h4 {
+            color: #2d3748;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-content p {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #2d3748;
+        }
+
+        .action-btn:hover {
+            border-color: #e67e22;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .action-btn i {
+            font-size: 24px;
+            color: #e67e22;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .action-btn span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .menu a.menu-item-logout {
+            color: rgba(255,255,255,0.85);
+            background: transparent;
+            border-left: 4px solid transparent;
+        }
+
+        .menu a.menu-item-logout:hover,
+        .menu a.menu-item-logout:focus {
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            color: white;
+            border-left: 4px solid white;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='Nividnewlogo.png') }}" alt="Nivid Logo">
+        </div>
+        <div class="title-group">
+            <h2 style="text-align: center; vertical-align: middle; margin: 0 0 5px 0; color: white;">FTB</h2>
+            <p style="text-align: center; vertical-align: middle; margin-top:5px; font-size: 16px; color: white;">Faculty Tool Box</p>
+        </div>
+        <ul class="menu">
+            <li><a href="Student_Dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="Model_Library.html"><i class="fas fa-cube"></i> Model Library</a></li>
+            <li><a href="My_Notes_Student.html"><i class="fas fa-sticky-note"></i> My Notes</a></li>
+            <li><a href="/student/exercises"><i class="fas fa-clipboard-list"></i> Exercise Library</a></li>
+            <li><a href="https://exam.nivid.co.in/auth/login.php" target="_blank" rel="noopener noreferrer"><i class="fas fa-cog"></i>Give Exam</a></li>
+            <li style="margin-top: auto;"><a href="/logout" class="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout </a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1>Welcome Back, {{session.name}}!</h1>
+                <p style="color: #718096; font-size: 14px; margin-top: 5px;">Here's what's happening with your learning today</p>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <h4>{{session.name}}</h4>
+                    <p>{{session.email}}</p>
+                </div>
+                <div class="user-avatar">
+                    {% set parts = session.name.split() %}
+                    {% if parts|length >= 2 %}
+                        {{ parts[0][0]|upper }}{{ parts[-1][0]|upper }}
+                    {% elif parts|length == 1 %}
+                        {{ parts[0][0:2]|upper }}
+                    {% else %}
+                        US
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3>16</h3>
+                <p>Available Models</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3>15</h3>
+                <p> Total Exercises</p>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Quick Actions</h2>
+                </div>
+
+                <div class="quick-actions">
+                    <a href="Model_Library.html" class="action-btn">
+                        <i class="fas fa-cube"></i>
+                        <span>Browse Models</span>
+                    </a>
+                    <a href="My_Notes_Student.html" class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Create New Note</span>
+                    </a>
+                    <a href="/student/exercises" class="action-btn">
+                        <i class="fas fa-file-alt"></i>
+                        <span>View Exercises</span>
+                    </a>
+                    <a href="https://exam.nivid.co.in/auth/login.php" target="_blank" rel="noopener noreferrer" class="action-btn">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Take Exam</span>
+                    </a>
+                </div>
+            </div>
+
+        
+        </div>
+    </div>
+</body>
+</html>

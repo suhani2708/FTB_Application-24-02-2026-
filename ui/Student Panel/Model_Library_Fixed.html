@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDU Toolbox - Model Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Poppins", sans-serif; background: #f8f9fa; }
+        .sidebar { position: fixed; left: 0; top: 0; height: 100vh; width: 260px; background: linear-gradient(135deg, #ff7b00 0%, #f89233 100%); padding: 30px 0; z-index: 1000; }
+        .logo { padding: 0 25px 30px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 30px; }
+        .logo h2 { color: white; font-size: 24px; font-weight: 700; }
+        .main-content { margin-left: 260px; padding: 30px; }
+        .header { background: white; padding: 20px 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); margin-bottom: 30px; }
+        .models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .model-card { background: white; border-radius: 15px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); overflow: hidden; transition: all 0.3s ease; }
+        .model-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+        .model-header { background: linear-gradient(135deg, #ff7b00 0%, #f89233 100%); padding: 30px 25px; text-align: center; color: white; }
+        .model-body { padding: 25px; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
+        .file-info { display: flex; align-items: center; flex: 1; }
+        .file-icon { width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 16px; }
+        .file-icon.mod { background: rgba(52, 152, 219, 0.1); color: #e67e22; }
+        .file-icon.excel { background: rgba(46, 204, 113, 0.1); color: #e4a11a; }
+        .file-icon.witness { background: rgba(155, 89, 182, 0.1); color: #e67e22; }
+        .file-icon.pdf { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+        .file-icon.ppt { background: rgba(230, 126, 34, 0.1); color: #e67e22; }
+        .open-btn { padding: 8px 16px; background: #e67e22; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.3s ease; }
+        .open-btn:hover { background: #d35400; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>EDU Toolbox</h2>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>Model Library</h1>
+            <p>Access all 15 business process simulation models</p>
+        </div>
+        
+        <div class="models-grid" id="modelsGrid">
+            <!-- Line Balancing -->
+            <div class="model-card">
+                <div class="model-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Line Balancing</h3>
+                </div>
+                <div class="model-body">
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon mod"><i class="fas fa-file-code"></i></div>
+                            <span>Witness Model</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Line Balancing/Model_Line_balancing.mod')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon excel"><i class="fas fa-file-excel"></i></div>
+                            <span>Excel Control</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Line Balancing/RunControl_Line_balancing.xlsm')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon witness"><i class="fas fa-desktop"></i></div>
+                            <span>Witness Export</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Line Balancing/AdvExpt_Line_balancing.wexp')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon pdf"><i class="fas fa-file-pdf"></i></div>
+                            <span>Problem Statement</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Line Balancing/ProblemStatement_Line_Balancing.pdf')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Johnson's Rule -->
+            <div class="model-card">
+                <div class="model-header">
+                    <i class="fas fa-sort-amount-down"></i>
+                    <h3>Johnson's Rule</h3>
+                </div>
+                <div class="model-body">
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon mod"><i class="fas fa-file-code"></i></div>
+                            <span>Witness Model</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Johnson_s Rule/Model_Jhonson_s_Rule.mod')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon excel"><i class="fas fa-file-excel"></i></div>
+                            <span>Excel Control</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Johnson_s Rule/RunControl_Johnson_s_Rule.xlsm')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon witness"><i class="fas fa-desktop"></i></div>
+                            <span>Witness Export</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Johnson_s Rule/AdvExpt_Jhonson_s_Rule.wexp')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MRP -->
+            <div class="model-card">
+                <div class="model-header">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Material Requirements Planning</h3>
+                </div>
+                <div class="model-body">
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon mod"><i class="fas fa-file-code"></i></div>
+                            <span>Witness Model</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Material Requirements Planning (MRP)/Model__Material_Requirements_Planning.mod')">Open</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-info">
+                            <div class="file-icon excel"><i class="fas fa-file-excel"></i></div>
+                            <span>Excel Control</span>
+                        </div>
+                        <button class="open-btn" onclick="openFile('Material Requirements Planning (MRP)/Runcontrol__Material_Requirements_Planning.xlsm')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more modules as needed -->
+        </div>
+    </div>
+
+    <script>
+        function openFile(filePath) {
+            fetch('/api/launch_file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ file_path: filePath })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('File opened:', filePath);
+                    // Show success indicator
+                    showNotification('File opened successfully!', 'success');
+                } else {
+                    showNotification('Failed to open file: ' + data.error, 'error');
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                showNotification('Error opening file. Please try again.', 'error');
+            });
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 9999;
+                padding: 12px 20px; border-radius: 8px; color: white;
+                background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-size: 14px; font-weight: 500;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
