@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
 EDU Toolbox - Multi-Module Flask Desktop Application
-→ ACTIVATION CODE FORMAT: anshT251226-UFBUGLGZ (20 chars)
-→ EXPIRY DATE EXTRACTED FROM KEY: 251226 = December 26, 2025
-→ FULL EXPIRY VALIDATION ON EVERY LOGIN
-→ BLOCKS LOGIN IF EXPIRED
-→ ✅ NOW: BLOCKS ROLE MISMATCH (Student form + Teacher key)
+→ SECURITY HARDENED VERSION (Feb 2026)
+→ FIXED: Critical Data Leak Vectors
+→ All file access now REQUIRES login + strong path traversal protection
+→ Role mismatch, expiry, and direct exposure completely blocked
 """
 
 import os
@@ -18,7 +17,7 @@ from pathlib import Path
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_file, send_from_directory, render_template_string
 import webview
-import traceback 
+import traceback
 import ctypes
 import re
 import hashlib
@@ -47,50 +46,44 @@ LICENSE_SIGNING_KEY = b"n1v1d_ultra_secure_key_2025_change_me_immediately_in_pro
 
 # 🔐 Verify activation code AND validate expiry from key
 def verify_activation_code_new(activation_code):
-    """
-    Verifies: anshT251226-UFBUGLGZ
-    Extracts expiry from key: 251226 → December 26, 2025
-    Returns: (email_hint, role, full_expiry_date) if valid AND not expired
-    """
     if not activation_code or len(activation_code) != 20 or activation_code[11] != '-':
         return None
-        
+       
     payload = activation_code[:11]      # anshT251226
     signature = activation_code[12:]    # UFBUGLGZ
-    
+   
     if len(payload) != 11 or len(signature) != 8:
         return None
-        
+       
     email_hint = payload[:4].lower()
     role_code = payload[4]
     exp_str = payload[5:11]  # 251226 (YYMMDD)
-    
+   
     if role_code not in ('S', 'T'):
         return None
-        
+       
     # ✅ EXTRACT AND VALIDATE EXPIRY FROM KEY
     try:
-        # Parse YYMMDD to actual date
-        year = int("20" + exp_str[:2])  # 25 → 2025
-        month = int(exp_str[2:4])       # 12
-        day = int(exp_str[4:6])         # 26
-        
+        year = int("20" + exp_str[:2])
+        month = int(exp_str[2:4])
+        day = int(exp_str[4:6])
+       
         expiry_date = datetime(year, month, day).date()
         today = datetime.now().date()
-        
+       
         if expiry_date < today:
             print(f"❌ License expired: {expiry_date} < {today}")
-            return None  # EXPIRED!
+            return None
     except (ValueError, IndexError) as e:
         print(f"❌ Invalid expiry format in key: {e}")
         return None
-        
+       
     # Verify signature
     expected_sig = generate_uppercase_signature(payload)
     if not hmac.compare_digest(signature, expected_sig):
         print("❌ Invalid signature")
         return None
-        
+       
     role = "teacher" if role_code == 'T' else "student"
     full_expiry = f"{year}-{month:02d}-{day:02d}"
     return email_hint, role, full_expiry
@@ -116,10 +109,9 @@ if getattr(sys, 'frozen', False):
 else:
     BASE_DIR = Path(__file__).parent
 
-app = Flask(__name__, 
+app = Flask(__name__,
            template_folder=resource_path('ui'),
            static_folder=resource_path('static'))
-
 app.secret_key = 'edu_toolbox_secure_key_2024_FIXED'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = False
@@ -127,12 +119,42 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_PATH'] = '/'
 app.config['SESSION_PERMANENT'] = False
 
+# ====================== SECURITY FIXES START ======================
+def require_api_auth():
+    """ALL file access (download + launch) now REQUIRES login"""
+    if not session.get('logged_in'):
+        return jsonify({"success": False, "error": "Please login to access files"}), 401
+    return None
+
+def get_safe_file_path(filename: str):
+    """STRONG Path Traversal Protection - prevents ../ attacks completely"""
+    base_dir = resource_path("assets/models").resolve()
+    
+    # Sanitize filename
+    safe_filename = os.path.normpath(filename).lstrip("/\\").replace("..", "_").replace("\\", "/")
+    
+    # Block absolute paths and dangerous patterns
+    if os.path.isabs(safe_filename) or any(part in safe_filename for part in ["..", "~", ":", "*"]):
+        raise ValueError("Access denied: Invalid path")
+    
+    full_path = (base_dir / safe_filename).resolve()
+    
+    # Critical check: must stay inside assets/models
+    if not str(full_path).startswith(str(base_dir)):
+        raise ValueError("Access denied: Path traversal attempt detected")
+    
+    if not full_path.exists():
+        raise FileNotFoundError(f"File not found: {filename}")
+    
+    return full_path
+# ====================== SECURITY FIXES END ======================
+
 class EDUToolboxApp:
     def __init__(self):
         self.base_path = BASE_DIR
         self.data_path = (BASE_DIR / "data").resolve()
         self.data_path.mkdir(parents=True, exist_ok=True)
-        
+       
         self.ui_path = resource_path('ui')
         self.modules_path = resource_path('modules')
         self.assets_path = resource_path('assets')
@@ -142,7 +164,7 @@ class EDUToolboxApp:
         self._ensure_directories()
         self.init_database()
         self.load_modules()
-    
+   
     def _ensure_directories(self):
         directories = [
             self.data_path,
@@ -157,7 +179,7 @@ class EDUToolboxApp:
         ]
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
-    
+   
     def init_database(self):
         try:
             conn = sqlite3.connect(self.db_path)
@@ -246,7 +268,7 @@ class EDUToolboxApp:
         finally:
             if 'conn' in locals():
                 conn.close()
-    
+   
     def load_modules(self):
         modules_file = self.modules_path / "modules.json"
         if not modules_file.exists():
@@ -296,17 +318,17 @@ class EDUToolboxApp:
         except Exception as e:
             print(f"ERROR loading modules.json: {e}")
             self.modules_config = {"modules": []}
-    
+   
     def get_user_modules(self, user_type):
         accessible = []
         for mod in self.modules_config.get("modules", []):
             if user_type in mod.get("access_level", []) or "student" in mod.get("access_level", []):
                 accessible.append(mod)
         return accessible
-
+   
     def start_flask_server(self):
         app.run(host='127.0.0.1', port=8080, debug=False, use_reloader=False)
-    
+   
     def create_window(self):
         self.window = webview.create_window(
             title='Faculty Tool Box By Nivid Informatics Pvt Ltd',
@@ -324,7 +346,7 @@ class EDUToolboxApp:
         except Exception as e:
             print(f"Icon set failed: {e}")
         return self.window
-    
+   
     def run(self):
         flask_thread = threading.Thread(target=self.start_flask_server, daemon=True)
         flask_thread.start()
@@ -337,8 +359,8 @@ def show_error_page(title, message, details=None, back_url="javascript:history.b
     details_html = ""
     if details:
         details_html = "<ul style='text-align: left; padding-left: 20px; margin: 10px 0;'>" + \
-                       "".join(f"<li>{d}</li>" for d in details) + "</ul>"
-    
+                      "".join(f"<li>{d}</li>" for d in details) + "</ul>"
+   
     return render_template_string(f'''
 <!DOCTYPE html>
 <html>
@@ -346,137 +368,28 @@ def show_error_page(title, message, details=None, back_url="javascript:history.b
     <meta charset="utf-8">
     <title>{title}</title>
     <style>
-        * {{
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }}
-        html, body {{
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }}
-        .video-background {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }}
-        .video-background::before {{
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 245, 235, 0.85) 0%, rgba(255, 228, 204, 0.85) 100%);
-            z-index: 1;
-        }}
-        #bg-video {{
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            filter: brightness(0.6) contrast(1.2) saturate(1.3);
-            z-index: 0;
-        }}
-        .overlay-particles {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }}
-        .particle {{
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 140, 26, 0.6);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-            box-shadow: 0 0 8px rgba(255, 140, 26, 0.4);
-        }}
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        html, body {{ height: 100%; overflow: hidden; font-family: Arial, sans-serif; }}
+        .video-background {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }}
+        .video-background::before {{ content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255, 245, 235, 0.85) 0%, rgba(255, 228, 204, 0.85) 100%); z-index: 1; }}
+        #bg-video {{ position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(0.6) contrast(1.2) saturate(1.3); z-index: 0; }}
+        .overlay-particles {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }}
+        .particle {{ position: absolute; width: 4px; height: 4px; background: rgba(255, 140, 26, 0.6); border-radius: 50%; animation: floatParticle linear infinite; box-shadow: 0 0 8px rgba(255, 140, 26, 0.4); }}
         .particle:nth-child(1) {{ top: 20%; left: 10%; animation-duration: 15s; animation-delay: 0s; }}
         .particle:nth-child(2) {{ top: 40%; left: 30%; animation-duration: 12s; animation-delay: 2s; }}
         .particle:nth-child(3) {{ top: 60%; left: 50%; animation-duration: 18s; animation-delay: 4s; }}
         .particle:nth-child(4) {{ top: 30%; right: 20%; animation-duration: 14s; animation-delay: 1s; }}
         .particle:nth-child(5) {{ top: 70%; right: 40%; animation-duration: 16s; animation-delay: 3s; }}
-
-        @keyframes floatParticle {{
-            0% {{ transform: translateY(0) translateX(0) scale(1); opacity: 0; }}
-            10% {{ opacity: 1; }}
-            50% {{ transform: translateY(-50vh) translateX(30px) scale(1.5); }}
-            90% {{ opacity: 1; }}
-            100% {{ transform: translateY(-100vh) translateX(60px) scale(0.5); opacity: 0; }}
-        }}
-
-        .modal-container {{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            z-index: 3;
-            position: relative;
-        }}
-        .modal {{
-            background: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            max-width: 420px;
-            text-align: center;
-            animation: modalFadeIn 0.5s ease-out forwards;
-        }}
-        @keyframes modalFadeIn {{
-            from {{ opacity: 0; transform: translateY(-20px); }}
-            to {{ opacity: 1; transform: translateY(0); }}
-        }}
-        .logo {{
-            width: 100px;
-            height: 100px;
-            margin-bottom: 16px;
-            object-fit: contain;
-        }}
-        .modal h2 {{
-            color: #ff7b00;
-            margin-top: 0;
-        }}
-        .modal p {{
-            line-height: 1.6;
-            margin: 15px 0;
-        }}
-        .btn {{
-            background: #ff7b00;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 15px;
-            font-weight: bold;
-        }}
-        .btn:hover {{
-            background: #e06d00;
-        }}
-        code {{
-            background: #f1f1f1;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-family: monospace;
-        }}
-        
+        @keyframes floatParticle {{ 0% {{ transform: translateY(0) translateX(0) scale(1); opacity: 0; }} 10% {{ opacity: 1; }} 50% {{ transform: translateY(-50vh) translateX(30px) scale(1.5); }} 90% {{ opacity: 1; }} 100% {{ transform: translateY(-100vh) translateX(60px) scale(0.5); opacity: 0; }} }}
+        .modal-container {{ display: flex; justify-content: center; align-items: center; height: 100vh; z-index: 3; position: relative; }}
+        .modal {{ background: white; padding: 24px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); max-width: 420px; text-align: center; animation: modalFadeIn 0.5s ease-out forwards; }}
+        @keyframes modalFadeIn {{ from {{ opacity: 0; transform: translateY(-20px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+        .logo {{ width: 100px; height: 100px; margin-bottom: 16px; object-fit: contain; }}
+        .modal h2 {{ color: #ff7b00; margin-top: 0; }}
+        .modal p {{ line-height: 1.6; margin: 15px 0; }}
+        .btn {{ background: #ff7b00; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 15px; font-weight: bold; }}
+        .btn:hover {{ background: #e06d00; }}
+        code {{ background: #f1f1f1; padding: 2px 4px; border-radius: 3px; font-family: monospace; }}
     </style>
 </head>
 <body>
@@ -485,15 +398,9 @@ def show_error_page(title, message, details=None, back_url="javascript:history.b
             <source src="https://player.vimeo.com/external/374498877.sd.mp4?s=c4c731d99b0aa29909ec6893ac1f395e7db9d5f5&profile_id=165&oauth2_token_id=57447761" type="video/mp4">
         </video>
     </div>
-
     <div class="overlay-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
     </div>
-
     <div class="modal-container">
         <div class="modal">
             <img src="{logo_url}" alt="Logo" class="logo">
@@ -536,14 +443,12 @@ def get_user_id_from_session():
 def login():
     try:
         activation_code = request.form.get('activation_code', '').strip()
-
         if not activation_code:
             return show_error_page(
                 title="Activation Code Required",
                 message="Please enter your 20-character activation code."
             ), 400
-
-        # 🔑 CRITICAL: Verify key AND extract/validate expiry from key itself
+       
         result = verify_activation_code_new(activation_code)
         if not result:
             return show_error_page(
@@ -551,11 +456,10 @@ def login():
                 message="Your activation code is invalid or has expired.",
                 details=["Valid format: anshT251226-UFBUGLGZ", "Check if your license expiry date has passed"]
             ), 400
-
+       
         email_hint, role, expiry_iso = result
-
-        # 🔐 NEW: Validate that key role matches login form's intent
-        form_role = request.form.get('user_type')  # 'student' or 'teacher'
+       
+        form_role = request.form.get('user_type')
         if form_role == 'student' and role != 'student':
             return show_error_page(
                 title="Role Mismatch",
@@ -568,21 +472,17 @@ def login():
                 message="This activation code is for a <strong>student</strong>, not a teacher.",
                 details=["Please use the Student Login panel."]
             ), 403
-
-        # Get user details
+       
         conn = sqlite3.connect(edu_app.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT id, name, email, institution FROM users WHERE user_key = ?", (activation_code,))
         user_record = cursor.fetchone()
-
         if user_record:
             user_id, name, email, college = user_record
         else:
-            # First-time user
             name = request.form.get('name', '').strip()
             email = request.form.get('email', '').strip().lower()
             college = request.form.get('college', '').strip()
-
             if not all([name, email, college]):
                 conn.close()
                 return show_error_page(
@@ -590,24 +490,20 @@ def login():
                     message="All fields are required for first-time activation:",
                     details=["• Full Name", "• Email", "• College"]
                 ), 400
-
             if not email.endswith('@gmail.com'):
                 conn.close()
                 return show_error_page(
                     title="Invalid Email",
                     message="Email must be a @gmail.com address."
                 ), 400
-
             cursor.execute('''
                 INSERT INTO users (user_key, user_type, name, email, institution, expiry)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''', (activation_code, role, name, email, college, expiry_iso))
             user_id = cursor.lastrowid
             conn.commit()
-
         conn.close()
-
-        # Set session
+       
         session.update({
             'logged_in': True,
             'role': role,
@@ -618,9 +514,7 @@ def login():
             'activation_code': activation_code,
             'expiry_date': expiry_iso
         })
-
         return redirect(f'/{role}/dashboard')
-
     except Exception as e:
         traceback.print_exc()
         return show_error_page(
@@ -642,58 +536,50 @@ def require_login(role=None):
 
 @app.route('/student/dashboard')
 def student_dashboard():
-    if require_login('student'):
-        return require_login('student')
+    if require_login('student'): return require_login('student')
     return render_template('Student Panel/Student_Dashboard.html')
 
 @app.route('/teacher/dashboard')
 def teacher_dashboard():
-    if require_login('teacher'):
-        return require_login('teacher')
+    if require_login('teacher'): return require_login('teacher')
     return render_template('Teacher Panel/Teacher_Dashboard.html')
 
 @app.route('/student/library')
 def student_library():
-    if require_login('student'):
-        return require_login('student')
+    if require_login('student'): return require_login('student')
     return render_template('Student Panel/Model_Library.html')
 
 @app.route('/student/notes')
 def student_notes():
-    if require_login('student'):
-        return require_login('student')
+    if require_login('student'): return require_login('student')
     return render_template('Student Panel/My_Notes_Student.html')
 
 @app.route('/student/exercises')
 def student_exercises():
-    if require_login('student'):
-        return require_login('student')
+    if require_login('student'): return require_login('student')
     return render_template('Student Panel/Assignments_Student.html')
 
 @app.route('/teacher/library')
 def teacher_library():
-    if require_login('teacher'):
-        return require_login('teacher')
+    if require_login('teacher'): return require_login('teacher')
     return render_template('Teacher Panel/Model_Library.html')
 
 @app.route('/teacher/students')
 def teacher_students():
-    if require_login('teacher'):
-        return require_login('teacher')
+    if require_login('teacher'): return require_login('teacher')
     return render_template('Teacher Panel/Students_Data.html')
 
 @app.route('/teacher/exercises')
 def teacher_exercises():
-    if require_login('teacher'):
-        return require_login('teacher')
+    if require_login('teacher'): return require_login('teacher')
     return render_template('Teacher Panel/Assignments.html')
 
 @app.route('/teacher/analytics')
 def teacher_analytics():
-    if require_login('teacher'):
-        return require_login('teacher')
+    if require_login('teacher'): return require_login('teacher')
     return '<h1>Analytics</h1><p><a href="/teacher/dashboard">Back to Dashboard</a></p>'
 
+# Redirect old HTML paths
 @app.route('/Student_Dashboard.html')
 def student_dashboard_html():
     return redirect('/student/dashboard')
@@ -728,19 +614,40 @@ def get_modules():
     modules = edu_app.get_user_modules(user_type)
     return jsonify({'modules': modules})
 
+# ====================== FIXED FILE ACCESS ROUTES (CRITICAL) ======================
+@app.route('/files/<path:filename>')
+@app.route('/api/download_file/<path:filename>')
+def serve_files(filename):
+    # 1. Must be logged in
+    auth = require_api_auth()
+    if auth:
+        return auth
+    
+    # 2. Strong path protection
+    try:
+        full_path = get_safe_file_path(filename)
+        return send_file(str(full_path), as_attachment=True)
+    except ValueError as e:
+        return str(e), 403
+    except FileNotFoundError:
+        return "File not found", 404
+    except Exception:
+        return "Server error", 500
+
 @app.route('/api/launch_file', methods=['POST'])
 def launch_file():
+    # 1. Must be logged in
+    auth = require_api_auth()
+    if auth:
+        return auth
+    
     data = request.get_json()
     file_path = data.get('file_path')
     if not file_path:
         return jsonify({"success": False, "error": "No file path"}), 400
-    normalized = os.path.normpath(file_path)
-    if '..' in normalized or normalized.startswith(os.sep) or ':' in normalized:
-        return jsonify({"success": False, "error": "Invalid path"}), 400
-    full_path = resource_path(f"assets/models/{normalized}")
-    if not full_path.exists():
-        return jsonify({"success": False, "error": "File not found"}), 404
+    
     try:
+        full_path = get_safe_file_path(file_path)
         if sys.platform == "win32":
             os.startfile(str(full_path))
         elif sys.platform == "darwin":
@@ -748,8 +655,11 @@ def launch_file():
         else:
             subprocess.Popen(["xdg-open", str(full_path)])
         return jsonify({"success": True})
+    except (ValueError, FileNotFoundError) as e:
+        return jsonify({"success": False, "error": str(e)}), 403 if "Access denied" in str(e) else 404
     except Exception as e:
         return jsonify({"success": False, "error": "Failed to open file"}), 500
+# ====================== END OF FIXED FILE ACCESS ======================
 
 @app.route('/api/notes', methods=['GET', 'POST'])
 @app.route('/api/notes/<int:note_id>', methods=['PUT', 'DELETE'])
@@ -793,17 +703,6 @@ def handle_notes(note_id=None):
         return jsonify({"success": False, "error": str(e)}), 500
     finally:
         conn.close()
-
-@app.route('/files/<path:filename>')
-@app.route('/api/download_file/<path:filename>')
-def serve_files(filename):
-    normalized = os.path.normpath(filename)
-    if '..' in normalized or normalized.startswith(os.sep) or ':' in normalized:
-        return "Invalid path", 400
-    file_path = resource_path(f"assets/models/{normalized}")
-    if not file_path.exists():
-        return "File not found", 404
-    return send_file(str(file_path), as_attachment=True)
 
 @app.route('/logout')
 def logout():
