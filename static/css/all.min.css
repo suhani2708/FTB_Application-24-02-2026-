@@ -1,0 +1,99 @@
+@font-face {
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("../fonts/fa-solid-900.otf") format("opentype");
+}
+
+.fa, .fas, .fa-solid {
+  font-family: "FontAwesome" !important;
+  font-weight: 900 !important;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+/* Login page icons */
+.fa-user:before { content: "\f007"; }
+.fa-key:before { content: "\f084"; }
+.fa-envelope:before { content: "\f0e0"; }
+.fa-building:before { content: "\f1ad"; }
+.fa-graduation-cap:before { content: "\f19d"; }
+.fa-chalkboard-teacher:before { content: "\f51c"; }
+.fa-sign-in-alt:before { content: "\f2f6"; }
+.fa-user-graduate:before { content: "\f501"; }
+
+/* Dashboard & Sidebar icons */
+.fa-home:before { content: "\f015"; }
+.fa-cube:before { content: "\f1b3"; }
+.fa-sticky-note:before { content: "\f249"; }
+.fa-clipboard-list:before { content: "\f46d"; }
+.fa-cog:before { content: "\f013"; }
+.fa-sign-out-alt:before { content: "\f2f5"; }
+.fa-plus-circle:before { content: "\f055"; }
+.fa-file-alt:before { content: "\f15c"; }
+.fa-clipboard-check:before { content: "\f46c"; }
+.fa-book:before { content: "\f02d"; }
+.fa-chart-bar:before { content: "\f080"; }
+
+/* Topic Specific Icons */
+.fa-truck:before { content: "\f0d1"; }
+.fa-sync-alt:before { content: "\f2f1"; }
+.fa-project-diagram:before { content: "\f542"; }
+.fa-leaf:before { content: "\f4d8"; }
+.fa-calendar-alt:before { content: "\f073"; }
+.fa-shield-alt:before { content: "\f3ed"; }
+.fa-cogs:before { content: "\f085"; }
+.fa-globe:before { content: "\f0ac"; }
+.fa-users:before { content: "\f0c0"; }
+.fa-wrench:before { content: "\f0ad"; }   
+.fa-chart-line:before { content: "\f201"; }
+
+/* File Type Icons */
+.fa-file-code:before { content: "\f1c9"; }
+.fa-file-powerpoint:before { content: "\f1c4"; }
+.fa-file-excel:before { content: "\f1c3"; }
+.fa-file-pdf:before { content: "\f1c1"; }
+.fa-desktop:before { content: "\f108"; }
+
+/* UI & Action Icons */
+.fa-plus:before { content: "\f067"; }
+.fa-info-circle:before { content: "\f05a"; }
+.fa-edit:before, .fa-pen-to-square:before { content: "\f044"; }
+.fa-eye:before { content: "\f06e"; }
+.fa-trash:before, .fa-trash-can:before { content: "\f2ed"; }
+.fa-calendar:before { content: "\f133"; }
+.fa-keyboard:before { content: "\f11c"; }
+.fa-tag:before { content: "\f02b"; }
+.fa-paperclip:before { content: "\f0c6"; }
+
+/* Dropdown & Navigation Icons */
+.fa-chevron-down:before { content: "\f078"; }
+.fa-chevron-up:before { content: "\f077"; }
+.fa-check-circle:before { content: "\f058"; }
+.fa-check:before { content: "\f00c"; }
+.fa-circle-check:before { content: "\f058"; }
+.fa-dot-circle:before { content: "\f192"; }
+
+/* Small orange icons in lists */
+.exercise-item i,
+.exercise-topic i,
+.accordion-header i,
+.exercise-list i {
+  color: #ff7b00 !important;
+  font-size: 14px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* File link icon */
+.file-link i {
+  color: #ff7b00 !important;
+  font-size: 14px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
