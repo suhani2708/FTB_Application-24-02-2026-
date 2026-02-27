@@ -97,3 +97,12 @@
   margin-right: 8px;
   vertical-align: middle;
 }
+.file-link:hover i {
+  color: #ffffff !important; /* This turns the icon white when the link is hovered */
+}
+
+.fa-times:before,
+.fa-close:before,
+.fa-xmark:before {
+  content: "\f00d";
+}
