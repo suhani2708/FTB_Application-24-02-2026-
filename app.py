@@ -488,14 +488,14 @@ def login():
                 return show_error_page(
                     title="First-Time Login",
                     message="All fields are required for first-time activation:",
-                    details=["• Full Name", "• Email", "• College"]
+                    details=[" Full Name", " Email", " College"]
                 ), 400
-            if not email.endswith('@gmail.com'):
-                conn.close()
-                return show_error_page(
-                    title="Invalid Email",
-                    message="Email must be a @gmail.com address."
-                ), 400
+            # if not email.endswith('@gmail.com'):
+            #     conn.close()
+            #     return show_error_page(
+            #         title="Invalid Email",
+            #         message="Email must be a @gmail.com address."
+            #     ), 400
             cursor.execute('''
                 INSERT INTO users (user_key, user_type, name, email, institution, expiry)
                 VALUES (?, ?, ?, ?, ?, ?)
