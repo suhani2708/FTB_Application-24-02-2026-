@@ -653,7 +653,7 @@
         return false;
       }
 
-      const newKeyPattern = /^[a-z]{4}[ST]\d{6}-[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/;
+      const newKeyPattern = /^[a-z]{2,5}\.?[a-z]{0,4}[ST]\d{6}-[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/;;
       if (!newKeyPattern.test(key)) {
         showError(errorMsg, "Invalid key format. Example: jyotS260105-64HYE9NP");
         return false;
