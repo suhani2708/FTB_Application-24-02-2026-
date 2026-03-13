@@ -114,10 +114,11 @@
         /* ===== NOTES GRID ===== */
         .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
         .note-card {
-            background: white; border-radius: 12px; padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;
-            cursor: pointer; border-top: 3px solid #ff7b00; font-size: 13px;
-        }
+    background: white; border-radius: 12px; padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;
+    cursor: pointer; border-top: 3px solid #ff7b00; font-size: 13px;
+    overflow: hidden; word-break: break-word; overflow-wrap: break-word;
+}
         .note-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
         .note-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .note-header h3 { color: #2d3748; font-size: 15px; font-weight: 700; flex: 1; word-break: break-word; }
@@ -128,10 +129,12 @@
         }
         .note-options .options-btn:hover { color: #ff7b00; }
         .note-content {
-            color: #718096; font-size: 12px; line-height: 1.5; margin-bottom: 10px;
-            display: -webkit-box; -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical; overflow: hidden;
-        }
+    color: #718096; font-size: 12px; line-height: 1.5; margin-bottom: 10px;
+    display: -webkit-box; -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical; overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
         .note-footer {
             display: flex; justify-content: space-between; align-items: center;
             padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 11px;
@@ -730,7 +733,7 @@
                 // Highlight selected option
                 [dateMode, modelMode, keywordMode].forEach(el => el.classList.remove('selected'));
                 clickedEl.classList.add('selected');
-                modeDropdown.classList.remove('active');
+                // modeDropdown.classList.remove('active');
                 filterNotesBySearchMode();
                 searchInput.focus();
             }
