@@ -152,14 +152,24 @@ def get_safe_file_path(filename: str):
 class EDUToolboxApp:
     def __init__(self):
         self.base_path = BASE_DIR
-        self.data_path = (BASE_DIR / "data").resolve()
+
+        # ✅ CORRECT - indented inside __init__
+        if getattr(sys, 'frozen', False):
+            self.data_path = Path(os.environ.get('APPDATA', Path.home())) / "EDUToolbox" / "data"
+        else:
+            self.data_path = (BASE_DIR / "data").resolve()
         self.data_path.mkdir(parents=True, exist_ok=True)
-       
+
         self.ui_path = resource_path('ui')
         self.modules_path = resource_path('modules')
         self.assets_path = resource_path('assets')
-        self.config_path = resource_path('config')
-        self.config_path.mkdir(exist_ok=True)
+
+        if getattr(sys, 'frozen', False):
+            self.config_path = Path(os.environ.get('APPDATA', Path.home())) / "EDUToolbox" / "config"
+        else:
+            self.config_path = resource_path('config')
+        self.config_path.mkdir(parents=True, exist_ok=True)
+
         self.db_path = self.data_path / "user_data.db"
         self._ensure_directories()
         self.init_database()
@@ -667,37 +677,45 @@ def handle_notes(note_id=None):
     user_id, error = get_user_id_from_session()
     if error:
         return jsonify({"success": False, "error": error}), 401
-    conn = sqlite3.connect(edu_app.db_path)
-    cursor = conn.cursor()
+    
+    # Use a 'with' block for cleaner connection handling
     try:
+        conn = sqlite3.connect(edu_app.db_path)
+        # WAL mode makes local desktop apps much faster and more stable
+        conn.execute("PRAGMA journal_mode=WAL;") 
+        cursor = conn.cursor()
+        
         if request.method == 'GET':
-            cursor.execute('SELECT id, title, content, tags, created_at FROM notes WHERE user_id = ? ORDER BY title', (user_id,))
+            cursor.execute('SELECT id, title, content, tags, created_at FROM notes WHERE user_id = ? ORDER BY created_at DESC', (user_id,))
             notes = [{"id": r[0], "title": r[1], "content": r[2], "tags": r[3] or "", "created_at": r[4]} for r in cursor.fetchall()]
             return jsonify({"notes": notes})
+
         elif request.method == 'POST':
             data = request.get_json()
             title = (data.get('title') or '').strip()
             content = (data.get('content') or '').strip()
+            
             if not title or not content:
                 return jsonify({"success": False, "error": "Title and content required"}), 400
-            cursor.execute('INSERT INTO notes (user_id, module_id, title, content, tags) VALUES (?, ?, ?, ?, ?)', (user_id, 'general', title, content, data.get('tags', '')))
+                
+            cursor.execute('INSERT INTO notes (user_id, module_id, title, content, tags) VALUES (?, ?, ?, ?, ?)', 
+                           (user_id, 'general', title, content, data.get('tags', '')))
             note_id_new = cursor.lastrowid
-            conn.commit()
+            conn.commit() # This ensures it is saved permanently to the .db file
             return jsonify({"success": True, "id": note_id_new})
+
         elif request.method == 'PUT' and note_id:
             data = request.get_json()
-            title = (data.get('title') or '').strip()
-            content = (data.get('content') or '').strip()
-            if not title or not content:
-                return jsonify({"success": False, "error": "Title and content required"}), 400
-            cursor.execute('UPDATE notes SET title = ?, content = ?, tags = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', (title, content, data.get('tags', ''), note_id, user_id))
+            cursor.execute('UPDATE notes SET title = ?, content = ?, tags = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', 
+                           (data.get('title'), data.get('content'), data.get('tags', ''), note_id, user_id))
             conn.commit()
             return jsonify({"success": cursor.rowcount > 0})
+
         elif request.method == 'DELETE' and note_id:
             cursor.execute("DELETE FROM notes WHERE id = ? AND user_id = ?", (note_id, user_id))
             conn.commit()
             return jsonify({"success": cursor.rowcount > 0})
-        return jsonify({"error": "Invalid method"}), 405
+
     except Exception as e:
         traceback.print_exc()
         return jsonify({"success": False, "error": str(e)}), 500

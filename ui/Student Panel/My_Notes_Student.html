@@ -6,575 +6,244 @@
     <title>FTB - My Notes</title>
     <link href="/static/fonts/poppins.css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/css/all.min.css" />
- <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: #f8f9fa;
-    }
-    /* ===== SIDEBAR (260px, orange gradient, matches Student Dashboard) ===== */
-    .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        width: 260px;
-        background: linear-gradient(135deg, #ff7b00, #ff9933); /* Orange gradient */
-        padding: 30px 0;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .logo-container {
-        margin: 10px 0 3px;
-        text-align: center;
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        width: auto !important;
-        height: auto !important;
-    }
-    .logo-container img {
-        width: 190px;
-        height: auto;
-        max-height: 190px;
-        border-radius: 0;
-        box-shadow: none;
-        object-fit: contain;
-        background: none;
-        padding: 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
-    }
-    .title-group {
-        text-align: center;
-        margin-bottom: 25px;
-        width: 100%;
-        padding: 0 20px;
-    }
-    .title-group h2 {
-        color: white;
-        margin: 0;
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
-    .title-group p {
-        color: rgba(255,255,255,0.9);
-        margin: 5px 0 0;
-        font-size: 16px;
-        font-weight: 500;
-    }
-    .menu {
-        list-style: none;
-        padding: 0;
-        width: 100%;
-        margin: 0;
-    }
-    .menu li {
-        margin-bottom: 5px;
-    }
-    .menu a {
-        display: flex;
-        align-items: center;
-        padding: 12px 25px;           /* Matched to Dashboard */
-        color: rgba(255,255,255,0.85); /* Matched to Dashboard */
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        font-size: 15px;              /* Explicitly set */
-        font-weight: 500;             /* No bolding */
-        width: 100%;
-        box-sizing: border-box;
-        border-left: 4px solid transparent; /
-    }
-    .menu a:hover,
-    .menu a.active {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border-left: 4px solid white;
-        border-radius: 8px;
-        padding: 12px 25px;
-        font-size: 15px;
-        font-weight: 500;
-        /* No font-size/weight change — inherit base values */
-    }
-    .menu a i {
-        margin-right: 15px;
-        font-size: 18px;
-        width: 25px;
-        text-align: center;
-      
-    }
-    
-    /* ===== MAIN CONTENT ===== */
-    .main-content {
-        margin-left: 260px;
-        padding: 20px;
-    }
-    .header {
-        background: white;
-        padding: 15px 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .header h1 {
-        color: #2d3748;
-        font-size: 22px;
-        font-weight: 700;
-    }
-    .header p {
-        color: #718096;
-        font-size: 12px;
-        margin-top: 3px;
-    }
-    .create-note-btn {
-        padding: 8px 16px;
-        background: linear-gradient(135deg, #ff7b00, #ff9933);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.3s ease;
-    }
-    .create-note-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 15px rgba(255, 123, 0, 0.3);
-    }
-    .notes-container {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        gap: 15px;
-    }
-    .notes-sidebar {
-        background: white;
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .sidebar-header h3 {
-        color: #2d3748;
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-    .search-notes {
-        width: 100%;
-        padding: 8px 12px;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 13px;
-        font-family: 'Poppins', sans-serif;
-    }
-    .search-notes:focus {
-        outline: none;
-        border-color: #ff7b00;
-        box-shadow: 0 0 0 2px rgba(255, 123, 0, 0.2);
-    }
-    /* Search Mode Dropdown */
-    .search-mode-selector {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-    .mode-button {
-        background: none;
-        border: none;
-        color: #718096;
-        font-size: 16px;
-        cursor: pointer;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        position: relative;
-    }
-    .mode-button:hover {
-        color: #ff7b00;
-    }
-    /* Tooltip styling */
-    .mode-button::after {
-        content: "Click here to select search mode";
-        position: absolute;
-        bottom: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #2d3748;
-        color: white;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        white-space: nowrap;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s, visibility 0.3s;
-        z-index: 1001;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .mode-button:hover::after {
-        opacity: 1;
-        visibility: visible;
-    }
-    .mode-dropdown {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        min-width: 250px;
-        padding: 12px;
-        z-index: 1000;
-    }
-    .mode-dropdown.active {
-        display: block;
-    }
-    .mode-option {
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-bottom: 8px;
-        transition: background-color 0.2s;
-    }
-    .mode-option:hover {
-        background-color: #f8f9fa;
-    }
-    .mode-option.selected {
-        background-color: #ff7b00;
-        color: white;
-    }
-    .mode-option i {
-        margin-right: 8px;
-    }
-    .mode-input-container {
-        margin-top: 10px;
-    }
-    .mode-input {
-        width: 100%;
-        padding: 8px 12px;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 13px;
-        font-family: 'Poppins', sans-serif;
-    }
-    .mode-input:focus {
-        outline: none;
-        border-color: #ff7b00;
-        box-shadow: 0 0 0 2px rgba(255, 123, 0, 0.2);
-    }
-    .notes-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 12px;
-    }
-    .note-card {
-        background: white;
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border-top: 3px solid #ff7b00;
-        font-size: 13px;
-    }
-    .note-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-    }
-    .note-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 10px;
-    }
-    .note-header h3 {
-        color: #2d3748;
-        font-size: 15px;
-        font-weight: 700;
-        flex: 1;
-        word-break: break-word;
-    }
-    .note-options {
-        display: flex;
-        gap: 5px;
-    }
-    .note-options .options-btn {
-        background: none;
-        border: none;
-        color: #718096;
-        font-size: 16px;
-        cursor: pointer;
-        padding: 3px;
-        margin-left: 3px;
-    }
-    .note-options .options-btn:hover {
-        color: #ff7b00;
-    }
-    .note-content {
-        color: #718096;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-bottom: 10px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    .note-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 8px;
-        border-top: 1px solid #e2e8f0;
-        font-size: 11px;
-    }
-    .note-date {
-        color: #a0aec0;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .note-tags {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-    }
-    .tag {
-        padding: 2px 6px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 600;
-        background: rgba(255, 123, 0, 0.1);
-        color: #ff7b00;
-    }
-    .empty-state {
-        background: white;
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .empty-state i {
-        font-size: 60px;
-        color: #e2e8f0;
-        margin-bottom: 10px;
-    }
-    .empty-state h2 {
-        color: #2d3748;
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-    .empty-state p {
-        color: #718096;
-        font-size: 13px;
-        margin-bottom: 15px;
-    }
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal.active {
-        display: flex;
-    }
-    .modal-content {
-        background: white;
-        border-radius: 16px;
-        width: 90%;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-    .modal-header {
-        padding: 20px;
-        border-bottom: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .modal-header h2 {
-        color: #2d3748;
-        font-size: 20px;
-        font-weight: 700;
-    }
-    .close-modal {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #f1f3f5;
-        border: none;
-        color: #718096;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    .modal-body {
-        padding: 20px;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        color: #4a5568;
-        font-weight: 600;
-        font-size: 13px;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        width: 100%;
-        padding: 10px 14px;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        font-size: 13px;
-        font-family: 'Poppins', sans-serif;
-    }
-    .form-group select {
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23718096' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        background-size: 14px 14px;
-        background-color: white;
-    }
-    .form-group textarea {
-        min-height: 120px;
-        resize: vertical;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-        outline: none;
-        border-color: #ff7b00;
-        box-shadow: 0 0 0 2px rgba(255, 123, 0, 0.2);
-    }
-    .modal-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-    .btn {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    .btn-primary {
-        background: linear-gradient(135deg, #ff7b00, #ff9933);
-        color: white;
-    }
-    .btn-secondary {
-        background: #f1f3f5;
-        color: #718096;
-    }
-    .btn-primary:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-    }
-    .btn-secondary:hover {
-        background: #e2e8f0;
-    }
-    /* View Note Modal */
-    .view-note-modal .modal-content {
-        max-width: 700px;
-    }
-    .view-note-header {
-        padding: 20px;
-        border-bottom: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .view-note-title {
-        color: #2d3748;
-        font-size: 20px;
-        font-weight: 700;
-    }
-    .view-note-content {
-        padding: 20px;
-        font-size: 14px;
-        line-height: 1.6;
-        color: #4a5568;
-    }
-    .view-note-footer {
-        padding: 15px 20px;
-        border-top: 1px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-        color: #718096;
-    }
-    .view-note-date {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    .view-note-tags {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-    }
-    .view-note-tag {
-        padding: 2px 6px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 600;
-        background: rgba(255, 123, 0, 0.1);
-        color: #ff7b00;
-    }
-</style>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f8f9fa; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed; left: 0; top: 0; height: 100vh; width: 260px;
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            padding: 30px 0; z-index: 1000;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .logo-container {
+            margin: 10px 0 3px; text-align: center;
+            background: none !important; border: none !important;
+            box-shadow: none !important; padding: 0 !important;
+        }
+        .logo-container img {
+            width: 190px; height: auto; max-height: 190px;
+            border-radius: 0; object-fit: contain;
+        }
+        .title-group {
+            text-align: center; margin-bottom: 25px;
+            width: 100%; padding: 0 20px;
+        }
+        .title-group h2 { color: white; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+        .title-group p  { color: rgba(255,255,255,0.9); margin: 5px 0 0; font-size: 16px; font-weight: 500; }
+        .menu { list-style: none; padding: 0; width: 100%; margin: 0; }
+        .menu li { margin-bottom: 5px; }
+        .menu a {
+            display: flex; align-items: center; padding: 12px 25px;
+            color: rgba(255,255,255,0.85); text-decoration: none;
+            transition: all 0.3s ease; border-radius: 8px;
+            font-size: 15px; font-weight: 500; width: 100%;
+            box-sizing: border-box; border-left: 4px solid transparent;
+        }
+        .menu a:hover, .menu a.active {
+            background: rgba(255,255,255,0.15); color: white;
+            border-left: 4px solid white;
+        }
+        .menu a i { margin-right: 15px; font-size: 18px; width: 25px; text-align: center; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content { margin-left: 260px; padding: 20px; }
+        .header {
+            background: white; padding: 15px 20px; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header h1 { color: #2d3748; font-size: 22px; font-weight: 700; }
+        .header p  { color: #718096; font-size: 12px; margin-top: 3px; }
+        .create-note-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff7b00, #ff9933);
+            color: white; border: none; border-radius: 8px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: all 0.3s ease;
+        }
+        .create-note-btn i {
+    font-size: 11px;   /* ← shrinks only the + icon */
+}
+        .create-note-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(255,123,0,0.3); }
+
+        /* ===== NOTES LAYOUT ===== */
+        .notes-container { display: grid; grid-template-columns: 280px 1fr; gap: 15px; }
+        .notes-sidebar {
+            background: white; border-radius: 12px; padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .sidebar-header h3 { color: #2d3748; font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+
+        /* ===== SEARCH MODE ===== */
+        .search-mode-selector { position: relative; display: inline-block; margin-bottom: 10px; }
+        .mode-button {
+            background: none; border: none; color: #718096; font-size: 16px;
+            cursor: pointer; padding: 5px; display: flex; align-items: center; gap: 5px; position: relative;
+        }
+        .mode-button:hover { color: #ff7b00; }
+        .mode-button::after {
+            content: "Click here to select search mode";
+            position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+            background: #2d3748; color: white; padding: 6px 12px; border-radius: 6px;
+            font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s; z-index: 1001; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .mode-button:hover::after { opacity: 1; visibility: visible; }
+        .mode-dropdown {
+            display: none; position: absolute; top: 100%; left: 0;
+            background: white; border: 1px solid #e2e8f0; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; padding: 12px; z-index: 1000;
+        }
+        .mode-dropdown.active { display: block; }
+        .mode-option {
+            padding: 8px 12px; border-radius: 6px; cursor: pointer;
+            margin-bottom: 8px; transition: background-color 0.2s;
+        }
+        .mode-option:hover { background-color: #f8f9fa; }
+        .mode-option.selected { background-color: #ff7b00; color: white; }
+        .mode-option i { margin-right: 8px; }
+        .mode-input-container { margin-top: 10px; }
+        .mode-input {
+            width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0;
+            border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif;
+        }
+        .mode-input:focus { outline: none; border-color: #ff7b00; box-shadow: 0 0 0 2px rgba(255,123,0,0.2); }
+
+        /* ===== NOTES GRID ===== */
+        .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .note-card {
+            background: white; border-radius: 12px; padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease;
+            cursor: pointer; border-top: 3px solid #ff7b00; font-size: 13px;
+        }
+        .note-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
+        .note-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .note-header h3 { color: #2d3748; font-size: 15px; font-weight: 700; flex: 1; word-break: break-word; }
+        .note-options { display: flex; gap: 5px; }
+        .note-options .options-btn {
+            background: none; border: none; color: #718096;
+            font-size: 16px; cursor: pointer; padding: 3px; margin-left: 3px;
+        }
+        .note-options .options-btn:hover { color: #ff7b00; }
+        .note-content {
+            color: #718096; font-size: 12px; line-height: 1.5; margin-bottom: 10px;
+            display: -webkit-box; -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .note-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 11px;
+        }
+        .note-date { color: #a0aec0; display: flex; align-items: center; gap: 4px; }
+        .note-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .tag { padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 600; background: rgba(255,123,0,0.1); color: #ff7b00; }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+    background: white; border-radius: 12px; padding:16px;
+    text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    grid-column: 1 / -1;
+    width: 260px; 
+}
+.empty-state i { font-size: 60px; color: #e2e8f0; margin-bottom: 10px; }
+.empty-state h2 { color: #2d3748; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.empty-state p  { color: #718096; font-size: 13px; margin-bottom: 15px; }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            z-index: 2000; align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white; border-radius: 16px;
+            width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h2 { color: #2d3748; font-size: 20px; font-weight: 700; }
+        .close-modal {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #f1f3f5; border: none; color: #718096; font-size: 16px; cursor: pointer;
+        }
+        .modal-body { padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #4a5568; font-weight: 600; font-size: 13px; }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%; padding: 10px 14px; border: 2px solid #e2e8f0;
+            border-radius: 8px; font-size: 13px; font-family: 'Poppins', sans-serif;
+        }
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23718096' d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 10px center;
+            background-size: 14px 14px; background-color: white;
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none; border-color: #ff7b00; box-shadow: 0 0 0 2px rgba(255,123,0,0.2);
+        }
+        .modal-footer {
+            padding: 15px 20px; border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: flex-end; gap: 10px;
+        }
+        .btn { padding: 8px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, #ff7b00, #ff9933); color: white; }
+        .btn-secondary { background: #f1f3f5; color: #718096; }
+        .btn-primary:hover  { opacity: 0.9; transform: translateY(-1px); }
+        .btn-secondary:hover { background: #e2e8f0; }
+
+        /* ===== VIEW NOTE MODAL ===== */
+        .view-note-modal .modal-content { max-width: 700px; }
+        .view-note-header {
+            padding: 20px; border-bottom: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .view-note-title { color: #2d3748; font-size: 20px; font-weight: 700; }
+        .view-note-content { padding: 20px; font-size: 14px; line-height: 1.6; color: #4a5568; white-space: pre-wrap; }
+        .view-note-footer {
+            padding: 15px 20px; border-top: 1px solid #e2e8f0;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 12px; color: #718096;
+        }
+        .view-note-date { display: flex; align-items: center; gap: 4px; }
+        .view-note-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .view-note-tag {
+            padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 600;
+            background: rgba(255,123,0,0.1); color: #ff7b00;
+        }
+    </style>
 </head>
 <body>
-    <!-- ✅ SIDEBAR (260px, orange, matches your image exactly) -->
-   <div class="sidebar">
-    <div class="logo-container">
-        <img src="{{ url_for('static', filename='Nividnewlogo.png') }}" alt="Nivid Logo">
-    </div>
-    <div class="title-group">
-        <h2>FTB</h2>
-        <p>Faculty Tool Box</p>
-    </div>
-    <ul class="menu">
-        <li><a href="Student_Dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="Model_Library.html"><i class="fas fa-cube"></i> Model Library</a></li>
-        <li><a href="My_Notes_Student.html" class="active"><i class="fas fa-sticky-note"></i> My Notes</a></li>
-        <li><a href="/student/exercises"><i class="fas fa-clipboard-list"></i> Exercise Library</a></li>
-        <li><a href="https://exam.nivid.co.in/auth/login.php" target="_blank" rel="noopener noreferrer"><i class="fas fa-cog"></i>Give Exam</a></li>
-    </ul>
-</div>
 
-    <!-- ✅ MAIN CONTENT -->
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='Nividnewlogo.png') }}" alt="Nivid Logo">
+        </div>
+        <div class="title-group">
+            <h2>FTB</h2>
+            <p>Faculty Tool Box</p>
+        </div>
+        <ul class="menu">
+            <li><a href="/student/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="/student/library"><i class="fas fa-cube"></i> Model Library</a></li>
+            <li><a href="/student/notes" class="active"><i class="fas fa-sticky-note"></i> My Notes</a></li>
+            <li><a href="/student/exercises"><i class="fas fa-clipboard-list"></i> Exercise Library</a></li>
+            <li><a href="https://exam.nivid.co.in/auth/login.php" target="_blank" rel="noopener noreferrer"><i class="fas fa-cog"></i> Give Exam</a></li>
+        </ul>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
         <div class="header">
             <div>
@@ -587,11 +256,10 @@
         </div>
 
         <div class="notes-container">
+            <!-- Left: Search Panel -->
             <div class="notes-sidebar">
                 <div class="sidebar-header">
                     <h3>Search Options</h3>
-                    
-                    <!-- Search Mode Selector -->
                     <div class="search-mode-selector">
                         <button class="mode-button" id="modeSelector">
                             <i class="fas fa-info-circle"></i> Select Search Mode
@@ -607,61 +275,61 @@
                                 <i class="fas fa-keyboard"></i> Search by Keyword
                             </div>
                             <div class="mode-input-container">
-                                <input type="text" class="mode-input" id="searchModelInput" placeholder="e.g., Line Balancing" style="display:none;">
+                                <input type="text" class="mode-input" id="searchModelInput"
+                                       placeholder="Type to search..." style="display:none;">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Right: Notes Grid -->
             <div>
                 <div class="notes-grid" id="notesGrid">
-                    <!-- Notes will be populated here -->
+                    <!-- Notes populated by JS -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ✅ CREATE/EDIT NOTE MODAL -->
+    <!-- ===== CREATE / EDIT NOTE MODAL ===== -->
     <div class="modal" id="noteModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Create New Note</h2>
+                <h2 id="modalTitle">Create New Note</h2>
                 <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <form id="noteForm">
-                    <div class="form-group">
-                        <label>Note Title</label>
-                        <select id="noteTitle" required>
-                            <option value="" disabled selected>Select a topic...</option>
-                            <option value="Critical Path Method">Critical Path Method</option>
-                            <option value="Hospital Resources Planning">Hospital Resources Planning</option>
-                            <option value="Inventory Planning">Inventory Planning</option>
-                            <option value="Johnson's Rule">Johnson's Rule</option>
-                            <option value="Just In Time (JIT)">Just In Time (JIT)</option>
-                            <option value="Layout Planning">Layout Planning</option>
-                            <option value="Lean Manufacturing">Lean Manufacturing</option>
-                            <option value="Line Balancing">Line Balancing</option>
-                            <option value="Logistics Planning">Logistics Planning</option>
-                            <option value="Maintenance Planning">Maintenance Planning</option>
-                            <option value="Material Control Techniques">Material Control Techniques</option>
-                            <option value="Material Requirements Planning">Material Requirements Planning</option>
-                            <option value="Production Scheduling">Production Scheduling</option>
-                            <option value="Project Evaluation Review Technique">Project Evaluation Review Technique</option>
-                            <option value="Queuing Theory">Queuing Theory</option>
-                            <option value="Reliability Engineering">Reliability Engineering</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Search Keyword</label>
-                        <input type="text" id="noteTags" placeholder="e.g., Line Balancing, Supply Chain...">
-                    </div>
-                    <div class="form-group">
-                        <label>Content</label>
-                        <textarea id="noteContent" placeholder="Start writing your notes here..." required></textarea>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label>Note Title</label>
+                    <select id="noteTitle" required>
+                        <option value="" disabled selected>Select a topic...</option>
+                        <option value="Critical Path Method">Critical Path Method</option>
+                        <option value="Hospital Resources Planning">Hospital Resources Planning</option>
+                        <option value="Inventory Planning">Inventory Planning</option>
+                        <option value="Johnson's Rule">Johnson's Rule</option>
+                        <option value="Just In Time (JIT)">Just In Time (JIT)</option>
+                        <option value="Layout Planning">Layout Planning</option>
+                        <option value="Lean Manufacturing">Lean Manufacturing</option>
+                        <option value="Line Balancing">Line Balancing</option>
+                        <option value="Logistics Planning">Logistics Planning</option>
+                        <option value="Maintenance Planning">Maintenance Planning</option>
+                        <option value="Material Control Techniques">Material Control Techniques</option>
+                        <option value="Material Requirements Planning">Material Requirements Planning</option>
+                        <option value="Production Scheduling">Production Scheduling</option>
+                        <option value="Project Evaluation Review Technique">Project Evaluation Review Technique</option>
+                        <option value="Queuing Theory">Queuing Theory</option>
+                        <option value="Reliability Engineering">Reliability Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Search Keyword</label>
+                    <input type="text" id="noteTags" placeholder="e.g., Line Balancing, Supply Chain...">
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="noteContent" placeholder="Start writing your notes here..." required></textarea>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
@@ -670,230 +338,223 @@
         </div>
     </div>
 
-    <!-- ✅ VIEW NOTE MODAL -->
-    <div class="modal" id="viewNoteModal">
-        <div class="modal-content view-note-modal">
+    <!-- ===== VIEW NOTE MODAL ===== -->
+    <div class="modal view-note-modal" id="viewNoteModal">
+        <div class="modal-content">
             <div class="view-note-header">
                 <h2 class="view-note-title" id="viewNoteTitle">Note Title</h2>
                 <button class="close-modal" onclick="closeViewNoteModal()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="view-note-content" id="viewNoteContent">
-                <!-- Content will be inserted here -->
-            </div>
+            <div class="view-note-content" id="viewNoteContent"></div>
             <div class="view-note-footer">
                 <div class="view-note-date">
-                    <i class="fas fa-clock"></i> <span id="viewNoteDate">11:33 AM</span>
+                    <i class="fas fa-clock"></i> <span id="viewNoteDate"></span>
                 </div>
-                <div class="view-note-tags" id="viewNoteTags">
-                    <!-- Tags will be inserted here -->
-                </div>
+                <div class="view-note-tags" id="viewNoteTags"></div>
             </div>
         </div>
     </div>
 
-    <!-- ✅ SCRIPT -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
         let notes = [];
         let editingNoteId = null;
         let currentSearchMode = null;
 
-        // 🗓️ Parse flexible date string (YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY, DD-MM-YYYY)
-        function parseFlexibleDate(str) {
-            if (!str) return null;
+        // ─── Helpers ──────────────────────────────────────────────────────────
 
-            str = str.trim().replace(/[\/\.\s]/g, '-');
-
-            const iso = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
-            if (iso) {
-                const [, y, m, d] = iso;
-                const date = new Date(`${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T12:00:00`);
-                return isNaN(date.getTime()) ? null : date;
-            }
-
-            const parts = str.split('-').map(Number);
-            if (parts.length === 3) {
-                const [a, b, c] = parts;
-                if (c > 31) {
-                    const date1 = new Date(`${c}-${String(b).padStart(2, '0')}-${String(a).padStart(2, '0')}T12:00:00`);
-                    if (!isNaN(date1.getTime()) && b <= 12 && a <= 31) return date1;
-
-                    const date2 = new Date(`${c}-${String(a).padStart(2, '0')}-${String(b).padStart(2, '0')}T12:00:00`);
-                    if (!isNaN(date2.getTime()) && a <= 12 && b <= 31) return date2;
-                }
-            }
-            return null;
-        }
-
-        // 🔍 Extract date from note content
-        function extractNoteDate(content) {
-            if (!content) return null;
-
-            const patterns = [
-                /^(\d{4}[-\/.]\d{1,2}[-\/.]\d{1,2})/,
-                /^(\d{1,2}[-\/.]\d{1,2}[-\/.]\d{4})/,
-                /^(\d{1,2}\s+[A-Za-z]+\s+\d{4})/,
-                /^([A-Za-z]+\s+\d{1,2},?\s+\d{4})/
-            ];
-
-            for (let pattern of patterns) {
-                const match = content.match(pattern);
-                if (match) {
-                    let dateStr = match[1];
-                    if (/[A-Za-z]/.test(dateStr)) {
-                        const d = new Date(dateStr);
-                        if (!isNaN(d.getTime())) return d;
-                    } else {
-                        const date = parseFlexibleDate(dateStr);
-                        if (date) return date;
-                    }
-                }
-            }
-            return null;
-        }
-
-        // 🔍 Filter notes by search mode
-        function filterNotesBySearchMode() {
-            const query = document.getElementById('searchModelInput')?.value.trim() || '';
-            const noteCards = document.querySelectorAll('.note-card');
-            
-            // If no search mode is selected or no query, show all notes
-            if (!currentSearchMode || !query) {
-                noteCards.forEach(card => card.style.display = 'block');
-                return;
-            }
-
-            noteCards.forEach(card => {
-                const noteId = card.dataset.noteId;
-                const note = notes.find(n => String(n.id) === noteId);
-                if (!note) {
-                    card.style.display = 'none';
-                    return;
-                }
-
-                let shouldShow = false;
-
-                if (currentSearchMode === 'date') {
-                    const noteDate = extractNoteDate(note.content);
-                    if (!noteDate) {
-                        card.style.display = 'none';
-                        return;
-                    }
-
-                    const queryDate = parseFlexibleDate(query);
-                    if (!queryDate) {
-                        card.style.display = 'none';
-                        return;
-                    }
-
-                    const isSameDate = (d1, d2) =>
-                        d1.getFullYear() === d2.getFullYear() &&
-                        d1.getMonth() === d2.getMonth() &&
-                        d1.getDate() === d2.getDate();
-
-                    shouldShow = isSameDate(noteDate, queryDate);
-                } else if (currentSearchMode === 'model') {
-                    // Check if the note title or tags contain the search term
-                    const searchTerm = query.toLowerCase();
-                    const noteTitle = note.title.toLowerCase();
-                    const noteTags = note.tags ? note.tags.toLowerCase() : '';
-                    
-                    shouldShow = noteTitle.includes(searchTerm) || noteTags.includes(searchTerm);
-                }else if (currentSearchMode === 'keyword') {
-                const searchTerm = query.toLowerCase();
-                const noteTitle = note.title.toLowerCase();
-                const noteContent = note.content.toLowerCase();
-                const noteTags = note.tags ? note.tags.toLowerCase() : '';
-    
-                shouldShow = noteTitle.includes(searchTerm) || 
-                 noteContent.includes(searchTerm) || 
-                 noteTags.includes(searchTerm);
-}
-
-                card.style.display = shouldShow ? 'block' : 'none';
-            });
-        }
-
-        // 🕒 Format note time (show only time: 12:00 PM)
-        function formatNoteTime(created_at_iso, content) {
-            const noteDateTime = extractNoteDateTime(content);
-            if (!noteDateTime) {
-                return new Date(created_at_iso).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                });
-            }
-
-            return noteDateTime.toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-        }
-
-        // 🔍 Extract date-time from note content
-        function extractNoteDateTime(content) {
-            if (!content) return null;
-
-            const patterns = [
-                /^(\d{4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})/,
-                /^(\d{1,2}[-\/.]\d{1,2}[-\/.]\d{4}\s+\d{1,2}:\d{2})/,
-                /^(\d{1,2}\s+[A-Za-z]+\s+\d{4}\s+\d{1,2}:\d{2})/,
-                /^([A-Za-z]+\s+\d{1,2},?\s+\d{4}\s+\d{1,2}:\d{2})/
-            ];
-
-            for (let pattern of patterns) {
-                const match = content.match(pattern);
-                if (match) {
-                    let dateTimeStr = match[1];
-                    let date = new Date(dateTimeStr);
-                    if (!isNaN(date.getTime())) return date;
-                }
-            }
-
-            return null;
-        }
-
-        // ✅ Escape HTML
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
-        // ——— Modal & CRUD ———
+        // Parse flexible date string → Date object (or null)
+        function parseFlexibleDate(str) {
+            if (!str) return null;
+            str = str.trim().replace(/[\/\.\s]/g, '-');
 
-        function openModal(noteId = null) {
-            editingNoteId = noteId;
-            const modal = document.getElementById('noteModal');
-            const title = document.querySelector('.modal-header h2');
-            
-            if (noteId) {
-                title.textContent = 'Edit Note';
-                loadNoteForEdit(noteId);
-            } else {
-                title.textContent = 'Create New Note';
-                clearForm();
+            const iso = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+            if (iso) {
+                const [, y, m, d] = iso;
+                const date = new Date(`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}T12:00:00`);
+                return isNaN(date.getTime()) ? null : date;
             }
-            
-            modal.classList.add('active');
+            const parts = str.split('-').map(Number);
+            if (parts.length === 3) {
+                const [a, b, c] = parts;
+                if (c > 31) {
+                    const d1 = new Date(`${c}-${String(b).padStart(2,'0')}-${String(a).padStart(2,'0')}T12:00:00`);
+                    if (!isNaN(d1.getTime()) && b <= 12 && a <= 31) return d1;
+                    const d2 = new Date(`${c}-${String(a).padStart(2,'0')}-${String(b).padStart(2,'0')}T12:00:00`);
+                    if (!isNaN(d2.getTime()) && a <= 12 && b <= 31) return d2;
+                }
+            }
+            return null;
         }
 
-        function closeModal() {
-            document.getElementById('noteModal').classList.remove('active');
-            editingNoteId = null;
-            clearForm();
+        // Extract date embedded at start of note content
+        function extractNoteDate(content) {
+            if (!content) return null;
+            const patterns = [
+                /^(\d{4}[-\/.]\d{1,2}[-\/.]\d{1,2})/,
+                /^(\d{1,2}[-\/.]\d{1,2}[-\/.]\d{4})/,
+                /^(\d{1,2}\s+[A-Za-z]+\s+\d{4})/,
+                /^([A-Za-z]+\s+\d{1,2},?\s+\d{4})/
+            ];
+            for (const pat of patterns) {
+                const m = content.match(pat);
+                if (m) {
+                    const ds = m[1];
+                    if (/[A-Za-z]/.test(ds)) {
+                        const d = new Date(ds);
+                        if (!isNaN(d.getTime())) return d;
+                    } else {
+                        const d = parseFlexibleDate(ds);
+                        if (d) return d;
+                    }
+                }
+            }
+            return null;
         }
 
-        function clearForm() {
-            document.getElementById('noteTitle').value = '';
-            document.getElementById('noteTags').value = '';
-            document.getElementById('noteContent').value = '';
+        // Extract datetime embedded at start of note content
+        function extractNoteDateTime(content) {
+            if (!content) return null;
+            const patterns = [
+                /^(\d{4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})/,
+                /^(\d{1,2}[-\/.]\d{1,2}[-\/.]\d{4}\s+\d{1,2}:\d{2})/
+            ];
+            for (const pat of patterns) {
+                const m = content.match(pat);
+                if (m) {
+                    const d = new Date(m[1]);
+                    if (!isNaN(d.getTime())) return d;
+                }
+            }
+            return null;
+        }
+
+        function formatNoteTime(created_at_iso, content) {
+            const dt = extractNoteDateTime(content);
+            const src = dt || new Date(created_at_iso);
+            return src.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+
+        // ─── Filter ───────────────────────────────────────────────────────────
+
+        // ✅ FIXED: operates on rendered cards, respects currentSearchMode
+        function filterNotesBySearchMode() {
+            const query = (document.getElementById('searchModelInput')?.value || '').trim();
+            const cards = document.querySelectorAll('.note-card');
+
+            if (!currentSearchMode || !query) {
+                cards.forEach(c => c.style.display = 'block');
+                return;
+            }
+
+            cards.forEach(card => {
+                const note = notes.find(n => String(n.id) === card.dataset.noteId);
+                if (!note) { card.style.display = 'none'; return; }
+
+                let show = false;
+
+                if (currentSearchMode === 'date') {
+                    const noteDate  = extractNoteDate(note.content);
+                    const queryDate = parseFlexibleDate(query);
+                    if (noteDate && queryDate) {
+                        show = noteDate.getFullYear() === queryDate.getFullYear() &&
+                               noteDate.getMonth()    === queryDate.getMonth()    &&
+                               noteDate.getDate()     === queryDate.getDate();
+                    }
+                } else if (currentSearchMode === 'model') {
+                    const term = query.toLowerCase();
+                    show = note.title.toLowerCase().includes(term) ||
+                           (note.tags || '').toLowerCase().includes(term);
+                } else if (currentSearchMode === 'keyword') {
+                    const term = query.toLowerCase();
+                    show = note.title.toLowerCase().includes(term)   ||
+                           note.content.toLowerCase().includes(term) ||
+                           (note.tags || '').toLowerCase().includes(term);
+                }
+
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        // ─── Display ──────────────────────────────────────────────────────────
+
+        // ✅ FIXED: uses notesToDisplay (not notes) for rendering
+        function displayNotes(filtered = null) {
+            const grid = document.getElementById('notesGrid');
+            // Use filtered list if provided, otherwise copy full notes array
+            let notesToDisplay = filtered !== null ? filtered : [...notes];
+
+            if (notesToDisplay.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sticky-note"></i>
+                        <h2>No Notes Yet</h2>
+                        <p>Create your first note to get started</p>
+                        <button class="create-note-btn" onclick="openModal()">
+                            <i class="fas fa-plus"></i> Create New Note
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            // Sort A→Z (case-insensitive)
+            notesToDisplay.sort((a, b) =>
+                a.title.localeCompare(b.title, undefined, { sensitivity: 'base', numeric: true })
+            );
+
+            grid.innerHTML = notesToDisplay.map(note => `
+                <div class="note-card" data-note-id="${note.id}">
+                    <div class="note-header">
+                        <h3>${escapeHtml(note.title)}</h3>
+                        <div class="note-options">
+                            <button class="options-btn" title="Edit"   onclick="editNote(${note.id})"><i class="fas fa-edit"></i></button>
+                            <button class="options-btn" title="View"   onclick="viewNote(${note.id})"><i class="fas fa-eye"></i></button>
+                            <button class="options-btn" title="Delete" onclick="deleteNote(${note.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="note-content">
+                        ${escapeHtml(note.content.length > 150 ? note.content.substring(0, 150) + '...' : note.content)}
+                    </div>
+                    <div class="note-footer">
+                        <span class="note-date">
+                            <i class="fas fa-clock"></i> ${formatNoteTime(note.created_at, note.content)}
+                        </span>
+                        <div class="note-tags">
+                            ${note.tags ? `<span class="tag">${escapeHtml(note.tags)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Apply active search filter immediately after rendering
+            filterNotesBySearchMode();
+        }
+
+        // ─── API Calls ────────────────────────────────────────────────────────
+
+        function loadNotes() {
+            fetch('/api/notes')
+                .then(r => r.json())
+                .then(data => {
+                    notes = data.notes || [];
+                    displayNotes();
+                })
+                .catch(err => {
+                    console.error('Error loading notes:', err);
+                    notes = [];
+                    displayNotes();
+                });
         }
 
         function saveNote() {
-            const title = document.getElementById('noteTitle').value.trim();
-            const tags = document.getElementById('noteTags').value.trim();
+            const title   = document.getElementById('noteTitle').value.trim();
+            const tags    = document.getElementById('noteTags').value.trim();
             const content = document.getElementById('noteContent').value.trim();
 
             if (!title || !content) {
@@ -901,17 +562,13 @@
                 return;
             }
 
+            // Prepend date-time stamp to content
             const now = new Date();
             const datePart = now.toISOString().split('T')[0];
             const timePart = now.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
             const formattedContent = `${datePart} ${timePart}:\n${content}`;
 
-            const noteData = {
-                title: title,
-                content: formattedContent,
-                tags: tags,
-                module_id: 'general'
-            };
+            const noteData = { title, content: formattedContent, tags, module_id: 'general' };
 
             if (editingNoteId) {
                 updateNote(editingNoteId, noteData);
@@ -926,20 +583,16 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(noteData)
             })
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    alert('Note created successfully!');
                     closeModal();
                     loadNotes();
                 } else {
                     alert('Error creating note: ' + data.error);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error creating note. Check console.');
-            });
+            .catch(err => { console.error(err); alert('Network error creating note.'); });
         }
 
         function updateNote(noteId, noteData) {
@@ -948,151 +601,94 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(noteData)
             })
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    alert('Note updated successfully!');
                     closeModal();
                     loadNotes();
                 } else {
                     alert('Error updating note: ' + data.error);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating note. Check console.');
-            });
+            .catch(err => { console.error(err); alert('Network error updating note.'); });
         }
 
-        function loadNotes() {
-            fetch('/api/notes')
-            .then(response => response.json())
-            .then(data => {
-                notes = data.notes || [];
-                displayNotes();
-            })
-            .catch(error => {
-                console.error('Error loading notes:', error);
-                const now = new Date();
-                const yesterday = new Date(now);
-                yesterday.setDate(yesterday.getDate() - 1);
-
-                notes = [
-                    {
-                id: 1,
-                title: "Line Balancing Fundamentals",
-                content: "2025-11-20:\nLine balancing is...",
-                tags: "Line Balancing",
-                created_at: "2025-11-20T10:00:00Z",
-              },
-              {
-                id: 2,
-                title: "Supply Chain Optimization",
-                content: "2025-11-19:\nSupply chain optimization...",
-                tags: "Supply Chain",
-                created_at: "2025-11-19T14:30:00Z",
-              },
-            ];
-            displayNotes();
-          });
-      }
-
-      function displayNotes(filtered = null) {
-        const grid = document.getElementById("notesGrid");
-        let notesToDisplay = filtered || [...notes];
-    
-    if (notes.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-sticky-note"></i>
-                <h2>No Notes Yet</h2>
-                <p>Create your first note to get started</p>
-                <button class="create-note-btn" onclick="openModal()">
-                    <i class="fas fa-plus"></i> Create New Note
-                </button>
-            </div>
-        `;
-        return;
-    }
-
-    // ✅ SORT FIRST — case-insensitive, stable
-    notes.sort((a, b) => 
-        a.title.localeCompare(b.title, undefined, { 
-            sensitivity: 'base', 
-            numeric: true 
-        })
-    );
-
-    // ✅ RENDER IN SORTED ORDER
-    grid.innerHTML = notes.map(note => `
-        <div class="note-card purple" data-note-id="${note.id}">
-            <div class="note-header">
-                <h3>${escapeHtml(note.title)}</h3>
-                <div class="note-options">
-                    <button class="options-btn" title="Edit" onclick="editNote(${note.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="options-btn" title="View" onclick="viewNote(${note.id})">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="options-btn" title="Delete" onclick="deleteNote(${note.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="note-content">
-                ${escapeHtml(note.content.length > 150 ? note.content.substring(0, 150) + '...' : note.content)}
-            </div>
-            <div class="note-footer">
-                <span class="note-date">
-                    <i class="fas fa-clock"></i> ${formatNoteTime(note.created_at, note.content)}
-                </span>
-                <div class="note-tags">
-                    ${note.tags ? `<span class="tag">${escapeHtml(note.tags)}</span>` : ''}
-                </div>
-            </div>
-        </div>
-    `).join('');
-
-    // ✅ Apply filter AFTER rendering (preserves sort order)
-    filterNotesBySearchMode(); // ← call synchronously, no setTimeout
-}
-
-        function editNote(noteId) {
-            openModal(noteId);
+        function deleteNote(noteId) {
+            if (!confirm('Are you sure you want to delete this note? This cannot be undone.')) return;
+            fetch(`/api/notes/${noteId}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        loadNotes();
+                    } else {
+                        alert('Error deleting note: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(err => { console.error(err); alert('Network error deleting note.'); });
         }
+
+        // ─── Modal helpers ────────────────────────────────────────────────────
+
+        function openModal(noteId = null) {
+            editingNoteId = noteId;
+            document.getElementById('modalTitle').textContent = noteId ? 'Edit Note' : 'Create New Note';
+            if (noteId) {
+                loadNoteForEdit(noteId);
+            } else {
+                clearForm();
+            }
+            document.getElementById('noteModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('noteModal').classList.remove('active');
+            editingNoteId = null;
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById('noteTitle').value   = '';
+            document.getElementById('noteTags').value    = '';
+            document.getElementById('noteContent').value = '';
+        }
+
+        function loadNoteForEdit(noteId) {
+            const note = notes.find(n => n.id === noteId);
+            if (!note) return;
+            document.getElementById('noteTitle').value = note.title;
+            document.getElementById('noteTags').value  = note.tags || '';
+            // Strip the prepended date-time prefix for editing
+            const prefixRegex = /^(\d{1,4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})[:\s\-\n]*/;
+            document.getElementById('noteContent').value = note.content.replace(prefixRegex, '').trim();
+        }
+
+        function editNote(noteId) { openModal(noteId); }
 
         function viewNote(noteId) {
             const note = notes.find(n => n.id === noteId);
             if (!note) return;
 
-            // Set the title
             document.getElementById('viewNoteTitle').textContent = note.title;
-            
-            // Set the content (remove the date/time prefix if it exists)
-            let content = note.content;
-            const prefixRegex = /^(\d{1,4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})[:\s-]*/;
-            content = content.replace(prefixRegex, '').trim();
-            document.getElementById('viewNoteContent').textContent = content;
-            
-            // Set the date
-            const noteTime = formatNoteTime(note.created_at, note.content);
-            document.getElementById('viewNoteDate').textContent = noteTime;
-            
-            // Set the tags
+
+            // Strip date-time prefix from displayed content
+            const prefixRegex = /^(\d{1,4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})[:\s\-\n]*/;
+            document.getElementById('viewNoteContent').textContent =
+                note.content.replace(prefixRegex, '').trim();
+
+            document.getElementById('viewNoteDate').textContent =
+                formatNoteTime(note.created_at, note.content);
+
             const tagsContainer = document.getElementById('viewNoteTags');
             tagsContainer.innerHTML = '';
             if (note.tags) {
-                const tagList = note.tags.split(',').map(tag => tag.trim());
-                tagList.forEach(tag => {
-                    const tagElement = document.createElement('span');
-                    tagElement.className = 'view-note-tag';
-                    tagElement.textContent = tag;
-                    tagsContainer.appendChild(tagElement);
+                note.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => {
+                    const span = document.createElement('span');
+                    span.className = 'view-note-tag';
+                    span.textContent = tag;
+                    tagsContainer.appendChild(span);
                 });
             }
-            
-            // Show the modal
+
             document.getElementById('viewNoteModal').classList.add('active');
         }
 
@@ -1100,104 +696,52 @@
             document.getElementById('viewNoteModal').classList.remove('active');
         }
 
-        function loadNoteForEdit(noteId) {
-            const note = notes.find(n => n.id === noteId);
-            if (note) {
-                document.getElementById('noteTitle').value = note.title;
-                document.getElementById('noteTags').value = note.tags || '';
-                
-                let content = note.content;
-                const prefixRegex = /^(\d{1,4}[-\/.]\d{1,2}[-\/.]\d{1,2}\s+\d{1,2}:\d{2})[:\s-]*/;
-                content = content.replace(prefixRegex, '').trim();
-                document.getElementById('noteContent').value = content;
-            }
-        }
+        // ─── Initialise ───────────────────────────────────────────────────────
 
-        function deleteNote(noteId) {
-            if (confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
-                fetch(`/api/notes/${noteId}`, { method: 'DELETE' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Note deleted successfully!');
-                        loadNotes();
-                    } else {
-                        alert('Error deleting note: ' + (data.error || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Network error. Check console.');
-                });
-            }
-        }
-
-        // 🚀 Initialize
-        document.addEventListener('DOMContentLoaded', function() {    
+        document.addEventListener('DOMContentLoaded', function () {
             loadNotes();
-            
-            // Setup search mode selector
-            const modeSelector = document.getElementById('modeSelector');
-            const modeDropdown = document.getElementById('modeDropdown');
-            const dateMode = document.getElementById('dateMode');
-            const modelMode = document.getElementById('modelMode');
-            const keywordMode = document.getElementById('keywordMode');
-            const searchModelInput = document.getElementById('searchModelInput');
-            
-            // Toggle dropdown on click
-            modeSelector.addEventListener('click', function(e) {
+
+            const modeSelector    = document.getElementById('modeSelector');
+            const modeDropdown    = document.getElementById('modeDropdown');
+            const dateMode        = document.getElementById('dateMode');
+            const modelMode       = document.getElementById('modelMode');
+            const keywordMode     = document.getElementById('keywordMode');
+            const searchInput     = document.getElementById('searchModelInput');
+
+            // Toggle dropdown
+            modeSelector.addEventListener('click', function (e) {
                 e.stopPropagation();
                 modeDropdown.classList.toggle('active');
             });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
+
+            // Close when clicking outside
+            document.addEventListener('click', function (e) {
                 if (!modeSelector.contains(e.target) && !modeDropdown.contains(e.target)) {
                     modeDropdown.classList.remove('active');
                 }
             });
-            
-            // Handle mode selection
-            dateMode.addEventListener('click', function(e) {
-                e.stopPropagation()
-                currentSearchMode = 'date';
-                searchModelInput.placeholder = 'e.g., 2025-11-26';
-                searchModelInput.value = '';
-                searchModelInput.style.display = 'block';
-                dateMode.classList.remove('selected');
-                
-                modeDropdown.classList.remove('selected');
-                filterNotesBySearchMode();
-            });
-            
-            modelMode.addEventListener('click', function(e) {
-                e.stopPropagation()
 
-                currentSearchMode = 'model';
-                searchModelInput.placeholder = 'e.g., Line Balancing';
-                searchModelInput.value = '';
-                searchModelInput.style.display = 'block';
-                modelMode.classList.remove('selected');
-               
-                modeDropdown.classList.remove('selected');
+            // Helper: activate a search mode
+            function activateMode(mode, placeholder, clickedEl) {
+                currentSearchMode = mode;
+                searchInput.placeholder = placeholder;
+                searchInput.value = '';
+                searchInput.style.display = 'block';
+                // Highlight selected option
+                [dateMode, modelMode, keywordMode].forEach(el => el.classList.remove('selected'));
+                clickedEl.classList.add('selected');
+                modeDropdown.classList.remove('active');
                 filterNotesBySearchMode();
-            });
-            keywordMode.addEventListener('click', function(e) {
-                e.stopPropagation();
-                currentSearchMode = 'keyword';
-                searchModelInput.placeholder = 'e.g., workstation, efficiency';
-                searchModelInput.value = '';
-                searchModelInput.style.display = 'block';
-                modeDropdown.classList.remove('selected');
-                modeDropdown.classList.remove('selected');
-            filterNotesBySearchMode();
-            });
-            
-            // Add event listener for search input
-            searchModelInput.addEventListener('input', filterNotesBySearchMode);
-            searchModelInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') filterNotesBySearchMode();
-            });
+                searchInput.focus();
+            }
+
+            dateMode.addEventListener('click',    e => { e.stopPropagation(); activateMode('date',    'e.g., 2025-11-26',          dateMode);    });
+            modelMode.addEventListener('click',   e => { e.stopPropagation(); activateMode('model',   'e.g., Line Balancing',      modelMode);   });
+            keywordMode.addEventListener('click', e => { e.stopPropagation(); activateMode('keyword', 'e.g., workstation, efficiency', keywordMode); });
+
+            // Live search on input
+            searchInput.addEventListener('input', filterNotesBySearchMode);
+            searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') filterNotesBySearchMode(); });
         });
     </script>
 </body>
