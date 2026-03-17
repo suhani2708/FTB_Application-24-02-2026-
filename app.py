@@ -45,48 +45,53 @@ def resource_path(relative_path):
 LICENSE_SIGNING_KEY = b"n1v1d_ultra_secure_key_2025_change_me_immediately_in_production!"
 
 # 🔐 Verify activation code AND validate expiry from key
-def verify_activation_code_new(activation_code):
-    if not activation_code or len(activation_code) != 20 or activation_code[11] != '-':
+def verify_activation_code_new(activation_code, user_email):
+    if not activation_code or not user_email:
         return None
-       
-    payload = activation_code[:11]      # anshT251226
-    signature = activation_code[12:]    # UFBUGLGZ
-   
-    if len(payload) != 11 or len(signature) != 8:
+    if len(activation_code) != 23:        # ← 23 chars
         return None
-       
-    email_hint = payload[:4].lower()
-    role_code = payload[4]
-    exp_str = payload[5:11]  # 251226 (YYMMDD)
-   
+    if activation_code[14] != '-':        # ← dash position 14
+        return None
+
+    payload     = activation_code[:14]
+    signature   = activation_code[15:]
+    local_hint  = payload[0:4]
+    domain_hint = payload[4:7]
+    role_code   = payload[7]
+    exp_str     = payload[8:14]
+
     if role_code not in ('S', 'T'):
         return None
-       
-    # ✅ EXTRACT AND VALIDATE EXPIRY FROM KEY
+
     try:
-        year = int("20" + exp_str[:2])
+        year  = int("20" + exp_str[:2])
         month = int(exp_str[2:4])
-        day = int(exp_str[4:6])
-       
+        day   = int(exp_str[4:6])
         expiry_date = datetime(year, month, day).date()
-        today = datetime.now().date()
-       
-        if expiry_date < today:
-            print(f"❌ License expired: {expiry_date} < {today}")
+        if expiry_date < datetime.now().date():
             return None
-    except (ValueError, IndexError) as e:
-        print(f"❌ Invalid expiry format in key: {e}")
+    except:
         return None
-       
-    # Verify signature
-    expected_sig = generate_uppercase_signature(payload)
+
+    email_clean = user_email.strip().lower()
+    local  = email_clean.split('@')[0]
+    domain = email_clean.split('@')[1]
+
+    if local[-4:].upper() != local_hint.upper():
+        return None
+    if domain[:3].upper() != domain_hint.upper():
+        return None
+
+    # HMAC verify — generator शी exact match हवं!
+    payload_for_hmac = f"{email_clean}|{role_code}|{exp_str}"
+    expected_sig = generate_uppercase_signature(payload_for_hmac)
+
     if not hmac.compare_digest(signature, expected_sig):
-        print("❌ Invalid signature")
         return None
-       
+
     role = "teacher" if role_code == 'T' else "student"
     full_expiry = f"{year}-{month:02d}-{day:02d}"
-    return email_hint, role, full_expiry
+    return local_hint, role, full_expiry
 
 def generate_uppercase_signature(payload: str) -> str:
     """Generate 8-char uppercase signature from payload using HMAC-SHA256."""
@@ -448,27 +453,45 @@ def get_user_id_from_session():
         return None, f"Database error during user validation: {e}"
     return user_id, None
 
-# ✅ FIXED /login — Now includes role validation (student/teacher mismatch prevention)
 @app.route('/login', methods=['POST'])
 def login():
     try:
         activation_code = request.form.get('activation_code', '').strip()
+        email = request.form.get('email', '').strip().lower()
+
         if not activation_code:
             return show_error_page(
                 title="Activation Code Required",
-                message="Please enter your 20-character activation code."
+                message="Please enter your activation code."
             ), 400
-       
-        result = verify_activation_code_new(activation_code)
+
+        # ✅ Returning user check — DB मध्ये key आहे का?
+        conn = sqlite3.connect(edu_app.db_path)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, name, email, institution, user_type, expiry FROM users WHERE user_key = ?",
+            (activation_code,)
+        )
+        existing_user = cursor.fetchone()
+        conn.close()
+
+        if existing_user:
+            # ✅ Returning user — DB मधून email घ्या, form email नको
+            user_id, name, db_email, college, role, expiry_iso = existing_user
+            email = db_email  # DB चा email वापरा verify साठी
+
+        # ✅ आता verify करा — email DB मधून आहे किंवा form मधून
+        result = verify_activation_code_new(activation_code, email)
         if not result:
             return show_error_page(
                 title="Invalid or Expired License",
                 message="Your activation code is invalid or has expired.",
-                details=["Valid format: anshT251226-UFBUGLGZ", "Check if your license expiry date has passed"]
+                details=["Valid format: 7002STUS270317-JXZFDJJV",
+                         "Check if your license expiry date has passed"]
             ), 400
-       
+
         email_hint, role, expiry_iso = result
-       
+
         form_role = request.form.get('user_type')
         if form_role == 'student' and role != 'student':
             return show_error_page(
@@ -482,56 +505,52 @@ def login():
                 message="This activation code is for a <strong>student</strong>, not a teacher.",
                 details=["Please use the Student Login panel."]
             ), 403
-       
-        conn = sqlite3.connect(edu_app.db_path)
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, name, email, institution FROM users WHERE user_key = ?", (activation_code,))
-        user_record = cursor.fetchone()
-        if user_record:
-            user_id, name, email, college = user_record
+
+        if existing_user:
+            # ✅ Returning user — DB मधून data घ्या
+            user_id, name, email, college, role, expiry_iso = existing_user
+
         else:
-            name = request.form.get('name', '').strip()
-            email = request.form.get('email', '').strip().lower()
+            # ✅ First time user — form मधून data घ्या
+            name    = request.form.get('name', '').strip()
+            email   = request.form.get('email', '').strip().lower()
             college = request.form.get('college', '').strip()
+
             if not all([name, email, college]):
-                conn.close()
                 return show_error_page(
                     title="First-Time Login",
                     message="All fields are required for first-time activation:",
-                    details=[" Full Name", " Email", " College"]
+                    details=["Full Name", "Email", "College"]
                 ), 400
-            # if not email.endswith('@gmail.com'):
-            #     conn.close()
-            #     return show_error_page(
-            #         title="Invalid Email",
-            #         message="Email must be a @gmail.com address."
-            #     ), 400
+
+            conn = sqlite3.connect(edu_app.db_path)
+            cursor = conn.cursor()
             cursor.execute('''
                 INSERT INTO users (user_key, user_type, name, email, institution, expiry)
                 VALUES (?, ?, ?, ?, ?, ?)
             ''', (activation_code, role, name, email, college, expiry_iso))
             user_id = cursor.lastrowid
             conn.commit()
-        conn.close()
-       
+            conn.close()
+
         session.update({
-            'logged_in': True,
-            'role': role,
-            'name': name,
-            'email': email,
-            'college': college,
-            'user_id': user_id,
+            'logged_in'      : True,
+            'role'           : role,
+            'name'           : name,
+            'email'          : email,
+            'college'        : college,
+            'user_id'        : user_id,
             'activation_code': activation_code,
-            'expiry_date': expiry_iso
+            'expiry_date'    : expiry_iso
         })
         return redirect(f'/{role}/dashboard')
+
     except Exception as e:
         traceback.print_exc()
         return show_error_page(
             title="Server Error",
             message="An unexpected error occurred. Please try again."
-        ), 500
-
+        ), 
 # Flask Routes
 @app.route('/')
 def index():

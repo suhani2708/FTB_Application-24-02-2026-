@@ -1,686 +1,799 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FTB - Faculty Tool Box Login</title>
-  <link href="/static/fonts/poppins.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/all.min.css" />
-  
-  <style>
-    html { height: 100%; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-      font-family: "Poppins", sans-serif;
-      min-height: 100vh;
-      padding: 20px;
-      background: #0f0f1e;
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTB - Faculty Tool Box Login</title>
+    <link href="/static/fonts/poppins.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/all.min.css" />
 
-    .login-container {
-      display: flex;
-      width: 75%;
-      max-width: 950px;
-      min-height: 85vh;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-      position: relative;
-      z-index: 10;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      margin: 40px auto;
-      overflow: hidden;
-    }
-
-    .login-left {
-      background: linear-gradient(135deg, #ff7b00, #ff9933);
-      padding: 40px 30px;
-      width: 45%;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      border-radius: 24px 0 0 24px;
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .logo-container {
-      text-align: center;
-      margin-bottom: 25px;
-      position: absolute;
-      top: 2px;
-      left: 3px;
-      z-index: 10;
-      width: 160px;
-      height: auto;
-      padding: 8px;
-      text-align: left;
-    }
-
-    .logo-container img {
-      width: 120px;
-      height: auto;
-      max-height: 80px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      object-fit: contain;
-      background: white;
-      padding: 6px;
-    }
-
-    .content-wrapper {
-      margin-top: 120px;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .new-logo-container {
-      margin: 10px 0 5px;
-      text-align: center;
-      background: none !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      width: auto !important;
-      height: auto !important;
-    }
-
-    .new-logo-container img {
-      width: 190px;
-      height: auto;
-      max-height: 190px;
-      border-radius: 0;
-      box-shadow: none;
-      object-fit: contain;
-      background: none;
-      padding: 0;
-    }
-
-    .login-left h1 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 5px;
-      text-align: center;
-    }
-
-    .login-left p {
-      font-size: 14px;
-      line-height: 1.5;
-      opacity: 0.9;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .brand-info {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .brand-info p {
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .login-right {
-      padding: 40px 40px;
-      width: 55%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .toggle-container {
-      display: flex;
-      background: #f1f3f5;
-      border-radius: 50px;
-      padding: 4px;
-      margin-bottom: 25px;
-    }
-
-    .toggle-btn {
-      flex: 1;
-      padding: 10px 16px;
-      border: none;
-      background: transparent;
-      border-radius: 50px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      color: #6c757d;
-      transition: all 0.3s ease;
-    }
-
-    .toggle-btn.active {
-      background: linear-gradient(135deg, #ff7b00, #ff9933);
-      color: white;
-      box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4);
-    }
-
-    .form-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #2d3748;
-      margin-bottom: 8px;
-    }
-
-    .form-subtitle {
-      color: #718096;
-      margin-bottom: 20px;
-      font-size: 13px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      color: #4a5568;
-      font-weight: 500;
-      font-size: 13px;
-    }
-
-    .form-group label i {
-      margin-right: 6px;
-      color: #ff7b00;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      font-family: "Poppins", sans-serif;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #ff7b00;
-      box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, #ff7b00, #ff9933);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255, 123, 0, 0.4);
-    }
-
-    .info-text {
-      text-align: center;
-      margin-top: 18px;
-      color: #718096;
-      font-size: 12px;
-    }
-
-    .info-text a {
-      color: #ff7b00;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .video-background::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 245, 235, 0.85) 0%,
-        rgba(255, 228, 204, 0.85) 100%
-      );
-      z-index: 1;
-    }
-
-    .overlay-particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .particle {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: rgba(255, 140, 26, 0.6);
-      border-radius: 50%;
-      animation: floatParticle linear infinite;
-      box-shadow: 0 0 8px rgba(255, 140, 26, 0.4);
-    }
-
-    .particle:nth-child(1) {
-      top: 20%;
-      left: 10%;
-      animation-duration: 15s;
-      animation-delay: 0s;
-    }
-
-    .particle:nth-child(2) {
-      top: 40%;
-      left: 30%;
-      animation-duration: 12s;
-      animation-delay: 2s;
-    }
-
-    .particle:nth-child(3) {
-      top: 60%;
-      left: 50%;
-      animation-duration: 18s;
-      animation-delay: 4s;
-    }
-
-    .particle:nth-child(4) {
-      top: 30%;
-      right: 20%;
-      animation-duration: 14s;
-      animation-delay: 1s;
-    }
-
-    .particle:nth-child(5) {
-      top: 70%;
-      right: 40%;
-      animation-duration: 16s;
-      animation-delay: 3s;
-    }
-
-    @keyframes floatParticle {
-      0% {
-        transform: translateY(0) translateX(0) scale(1);
-        opacity: 0;
+    <style>
+      html {
+        height: 100%;
       }
-      10% {
-        opacity: 1;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      50% {
-        transform: translateY(-50vh) translateX(30px) scale(1.5);
+
+      body {
+        font-family: "Poppins", sans-serif;
+        min-height: 100vh;
+        padding: 20px;
+        background: #0f0f1e;
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
-      90% {
-        opacity: 1;
+
+      .login-container {
+        display: flex;
+        width: 75%;
+        max-width: 950px;
+        min-height: 85vh;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 24px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin: 40px auto;
+        overflow: hidden;
       }
-      100% {
-        transform: translateY(-100vh) translateX(60px) scale(0.5);
-        opacity: 0;
+
+      .login-left {
+        background: linear-gradient(135deg, #ff7b00, #ff9933);
+        padding: 40px 30px;
+        width: 45%;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        border-radius: 24px 0 0 24px;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
       }
-    }
 
-    .copyright-notice {
-      text-align: right;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #ff7b00;
-      font-weight: 500;
-    }
+      .logo-container {
+        text-align: center;
+        margin-bottom: 25px;
+        position: absolute;
+        top: 2px;
+        left: 3px;
+        z-index: 10;
+        width: 160px;
+        height: auto;
+        padding: 8px;
+        text-align: left;
+      }
 
-    .error-message {
-      background: #fee;
-      color: #c33;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      font-size: 13px;
-      display: none;
-    }
+      .logo-container img {
+        width: 120px;
+        height: auto;
+        max-height: 80px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        object-fit: contain;
+        background: white;
+        padding: 6px;
+      }
 
-    .activation-hint {
-      font-size: 11px;
-      color: #666;
-      margin-top: 4px;
-      text-align: left;
-    }
+      .content-wrapper {
+        margin-top: 120px;
+        text-align: center;
+        padding: 0 20px;
+      }
 
-    .role-hint {
-      font-size: 12px;
-      margin-top: 4px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      display: none;
-    }
+      .new-logo-container {
+        margin: 10px 0 5px;
+        text-align: center;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: auto !important;
+        height: auto !important;
+      }
 
-    .role-hint.student {
-      background: #e3f2fd;
-      color: #1976d2;
-      border-left: 3px solid #2196f3;
-    }
+      .new-logo-container img {
+        width: 190px;
+        height: auto;
+        max-height: 190px;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;
+        background: none;
+        padding: 0;
+      }
 
-    .role-hint.teacher {
-      background: #f3e5f5;
-      color: #7b1fa2;
-      border-left: 3px solid #9c27b0;
-    }
+      .login-left h1 {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-align: center;
+      }
 
-    .role-mismatch {
-      background: #fff3e0 !important;
-      border: 1px solid #ff9800 !important;
-      position: relative;
-    }
+      .login-left p {
+        font-size: 14px;
+        line-height: 1.5;
+        opacity: 0.9;
+        margin-bottom: 20px;
+        text-align: center;
+      }
 
-    .role-mismatch::after {
-      content: "⚠️ Role mismatch!";
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #ff9800;
-      font-weight: 600;
-      font-size: 12px;
-    }
+      .brand-info {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+      }
 
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
+      .brand-info p {
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: #0a0a15;
-    }
+      .login-right {
+        padding: 40px 40px;
+        width: 55%;
+        display: flex;
+        flex-direction: column;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: #555;
-      border-radius: 4px;
-    }
+      .toggle-container {
+        display: flex;
+        background: #f1f3f5;
+        border-radius: 50px;
+        padding: 4px;
+        margin-bottom: 25px;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #777;
-    }
+      .toggle-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6c757d;
+        transition: all 0.3s ease;
+      }
 
-    html {
-      scrollbar-color: #555 #0a0a15;
-      scrollbar-width: thin;
-    }
-  </style>
-</head>
+      .toggle-btn.active {
+        background: linear-gradient(135deg, #ff7b00, #ff9933);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4);
+      }
 
-<body>
-  <!-- Video container kept empty – video removed -->
-  <div class="video-background"></div>
+      .form-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 8px;
+      }
 
-  <div class="overlay-particles">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-  </div>
+      .form-subtitle {
+        color: #718096;
+        margin-bottom: 20px;
+        font-size: 13px;
+      }
 
-  <div class="login-container">
-    <div class="login-left">
-      <div class="logo-container">
-        <img src="{{ url_for('static', filename='Nivid_old_logo_HD.png') }}" alt="Nivid Logo" />
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        color: #4a5568;
+        font-weight: 500;
+        font-size: 13px;
+      }
+
+      .form-group label i {
+        margin-right: 6px;
+        color: #ff7b00;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #ff7b00;
+        box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #ff7b00, #ff9933);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 123, 0, 0.4);
+      }
+
+      .info-text {
+        text-align: center;
+        margin-top: 18px;
+        color: #718096;
+        font-size: 12px;
+      }
+
+      .info-text a {
+        color: #ff7b00;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .video-background::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 245, 235, 0.85) 0%,
+          rgba(255, 228, 204, 0.85) 100%
+        );
+        z-index: 1;
+      }
+
+      .overlay-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255, 140, 26, 0.6);
+        border-radius: 50%;
+        animation: floatParticle linear infinite;
+        box-shadow: 0 0 8px rgba(255, 140, 26, 0.4);
+      }
+
+      .particle:nth-child(1) {
+        top: 20%;
+        left: 10%;
+        animation-duration: 15s;
+        animation-delay: 0s;
+      }
+
+      .particle:nth-child(2) {
+        top: 40%;
+        left: 30%;
+        animation-duration: 12s;
+        animation-delay: 2s;
+      }
+
+      .particle:nth-child(3) {
+        top: 60%;
+        left: 50%;
+        animation-duration: 18s;
+        animation-delay: 4s;
+      }
+
+      .particle:nth-child(4) {
+        top: 30%;
+        right: 20%;
+        animation-duration: 14s;
+        animation-delay: 1s;
+      }
+
+      .particle:nth-child(5) {
+        top: 70%;
+        right: 40%;
+        animation-duration: 16s;
+        animation-delay: 3s;
+      }
+
+      @keyframes floatParticle {
+        0% {
+          transform: translateY(0) translateX(0) scale(1);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-50vh) translateX(30px) scale(1.5);
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) translateX(60px) scale(0.5);
+          opacity: 0;
+        }
+      }
+
+      .copyright-notice {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #ff7b00;
+        font-weight: 500;
+      }
+
+      .error-message {
+        background: #fee;
+        color: #c33;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        font-size: 13px;
+        display: none;
+      }
+
+      .activation-hint {
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+        text-align: left;
+      }
+
+      .role-hint {
+        font-size: 12px;
+        margin-top: 4px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        display: none;
+      }
+
+      .role-hint.student {
+        background: #e3f2fd;
+        color: #1976d2;
+        border-left: 3px solid #2196f3;
+      }
+
+      .role-hint.teacher {
+        background: #f3e5f5;
+        color: #7b1fa2;
+        border-left: 3px solid #9c27b0;
+      }
+
+      .role-mismatch {
+        background: #fff3e0 !important;
+        border: 1px solid #ff9800 !important;
+        position: relative;
+      }
+
+      .role-mismatch::after {
+        content: "⚠️ Role mismatch!";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ff9800;
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #0a0a15;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #777;
+      }
+
+      html {
+        scrollbar-color: #555 #0a0a15;
+        scrollbar-width: thin;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Video container kept empty – video removed -->
+    <div class="video-background"></div>
+
+    <div class="overlay-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+    <div class="login-container">
+      <div class="login-left">
+        <div class="logo-container">
+          <img
+            src="{{ url_for('static', filename='Nivid_old_logo_HD.png') }}"
+            alt="Nivid Logo"
+          />
+        </div>
+        <div class="new-logo-container">
+          <img
+            src="{{ url_for('static', filename='Nividnewlogo.png') }}"
+            alt="Nivid New Logo"
+          />
+        </div>
+        <div>
+          <h1>Faculty Tool Box</h1>
+          <p>
+            Access comprehensive learning models and tools for Witness software.
+            Enhance your business process simulation skills with our curated
+            model library and resources.
+          </p>
+        </div>
+        <div class="brand-info">
+          <p>
+            <i class="fas fa-graduation-cap"></i> Powered by Nivid Informatics
+            Pvt.Ltd
+          </p>
+          <p>
+            Your gateway to mastering business process simulation and process
+            optimization.
+          </p>
+        </div>
+        <div
+          class="version-info"
+          style="
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #ffffff;
+            text-align: left;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            box-sizing: border-box;
+          "
+        >
+          Faculty Tool Box - Basic Version 1.0
+        </div>
       </div>
-      <div class="new-logo-container">
-        <img src="{{ url_for('static', filename='Nividnewlogo.png') }}" alt="Nivid New Logo" />
-      </div>
-      <div>
-        <h1>Faculty Tool Box</h1>
-        <p>
-          Access comprehensive learning models and tools for Witness software.
-          Enhance your business process simulation skills with our curated
-          model library and resources.
-        </p>
-      </div>
-      <div class="brand-info">
-        <p>
-          <i class="fas fa-graduation-cap"></i> Powered by Nivid Informatics Pvt.Ltd
-        </p>
-        <p>
-          Your gateway to mastering business process simulation and process optimization.
-        </p>
-      </div>
-      <div class="version-info" style="position: absolute; bottom: 2px; left: 0; right: 0; padding: 6px 15px; text-align: center; font-size: 11px; color: #ffffff; text-align: left; font-weight: 500; letter-spacing: 0.5px; box-sizing: border-box;">
-        Faculty Tool Box - Basic Version 1.0
+
+      <div class="login-right">
+        <div class="toggle-container">
+          <button class="toggle-btn active" onclick="switchLogin('student')">
+            <i class="fas fa-user-graduate"></i> Student Login
+          </button>
+          <button class="toggle-btn" onclick="switchLogin('teacher')">
+            <i class="fas fa-chalkboard-teacher"></i> Teacher Login
+          </button>
+        </div>
+
+        <!-- Student Form -->
+        <div id="student-form">
+          <h2 class="form-title">Welcome Back, Student!</h2>
+          <p class="form-subtitle">
+            Enter your credentials to access your learning dashboard
+          </p>
+          <div class="error-message" id="student-error"></div>
+          <form
+            method="post"
+            action="/login"
+            onsubmit="return validateForm(event, 'student');"
+            novalidate
+          >
+            <input type="hidden" name="user_type" value="student" />
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Full Name</label>
+              <input
+                type="text"
+                name="name"
+                id="student-name"
+                placeholder="Enter your full name (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-building"></i> College Name</label>
+              <input
+                type="text"
+                name="college"
+                id="student-college"
+                placeholder="Enter your college name (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Email Address</label>
+              <input
+                type="email"
+                name="email"
+                id="student-email"
+                placeholder="Enter your email address here (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-key"></i> Activation Code</label>
+              <input
+                type="text"
+                name="activation_code"
+                id="student-key"
+                placeholder="e.g. jyotS260105-64HYE9NP"
+                maxlength="25"
+                required
+                oninput="detectRole('student')"
+              />
+              <div class="activation-hint">
+                🔑 <strong>Example:</strong>
+                <code>jyotS260105-64HYE9NP</code> (23 characters)<br />
+                Returning users: only this field is required.
+              </div>
+              <div class="role-hint" id="student-role-hint"></div>
+            </div>
+            <button type="submit" class="login-btn">
+              <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+            </button>
+            <p class="info-text">
+              Don't have access? <a href="#">Contact nivid.co.in</a>
+            </p>
+            <div class="copyright-notice">© by Nivid Informatics Pvt Ltd</div>
+          </form>
+        </div>
+
+        <!-- Teacher Form -->
+        <div id="teacher-form" style="display: none">
+          <h2 class="form-title">Welcome Back, Teacher!</h2>
+          <p class="form-subtitle">
+            Enter your credentials to access the teaching dashboard
+          </p>
+          <div class="error-message" id="teacher-error"></div>
+          <form
+            method="post"
+            action="/login"
+            onsubmit="return validateForm(event, 'teacher');"
+            novalidate
+          >
+            <input type="hidden" name="user_type" value="teacher" />
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Full Name</label>
+              <input
+                type="text"
+                name="name"
+                id="teacher-name"
+                placeholder="Enter your full name (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-building"></i> College Name</label>
+              <input
+                type="text"
+                name="college"
+                id="teacher-college"
+                placeholder="Enter your college name (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Email Address</label>
+              <input
+                type="email"
+                name="email"
+                id="teacher-email"
+                placeholder="Enter your email address here (Required for new sessions)"
+              />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-key"></i> Activation Code</label>
+              <input
+                type="text"
+                name="activation_code"
+                id="teacher-key"
+                placeholder="e.g. jyotS260105-64HYE9NP"
+                maxlength="25"
+                required
+                oninput="detectRole('teacher')"
+              />
+              <div class="activation-hint">
+                🔑 <strong>Example:</strong>
+                <code>jyotS260105-64HYE9NP</code> (23 characters)<br />
+                Returning users: only this field is required.
+              </div>
+              <div class="role-hint" id="teacher-role-hint"></div>
+            </div>
+            <button type="submit" class="login-btn">
+              <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+            </button>
+            <p class="info-text">
+              Need assistance? <a href="#">Contact Support</a>
+            </p>
+            <div class="copyright-notice">© by Nivid Informatics Pvt Ltd</div>
+          </form>
+        </div>
       </div>
     </div>
 
-    <div class="login-right">
-      <div class="toggle-container">
-        <button class="toggle-btn active" onclick="switchLogin('student')">
-          <i class="fas fa-user-graduate"></i> Student Login
-        </button>
-        <button class="toggle-btn" onclick="switchLogin('teacher')">
-          <i class="fas fa-chalkboard-teacher"></i> Teacher Login
-        </button>
-      </div>
+    <script>
+      // Your JavaScript remains completely unchanged
+      // ✅ नवीन — REPLACE करा
+function detectRole(formType) {
+    const keyInput = document.getElementById(`${formType}-key`);
+    const hintDiv = document.getElementById(`${formType}-role-hint`);
+    const key = keyInput.value.trim();
 
-      <!-- Student Form -->
-      <div id="student-form">
-        <h2 class="form-title">Welcome Back, Student!</h2>
-        <p class="form-subtitle">
-          Enter your credentials to access your learning dashboard
-        </p>
-        <div class="error-message" id="student-error"></div>
-        <form method="post" action="/login" onsubmit="return validateForm(event, 'student')" novalidate>
-          <input type="hidden" name="user_type" value="student" />
-          <div class="form-group">
-            <label><i class="fas fa-user"></i> Full Name</label>
-            <input type="text" name="name" id="student-name" placeholder="Enter your full name (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-building"></i> College Name</label>
-            <input type="text" name="college" id="student-college" placeholder="Enter your college name (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-envelope"></i> Email Address</label>
-            <input type="email" name="email" id="student-email" placeholder="Enter your email address here (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-key"></i> Activation Code</label>
-            <input type="text" name="activation_code" id="student-key" placeholder="e.g. jyotS260105-64HYE9NP" maxlength="21" required oninput="detectRole('student')" />
-            <div class="activation-hint">
-              🔑 <strong>Example:</strong> <code>jyotS260105-64HYE9NP</code> (20 characters)<br>
-              Returning users: only this field is required.
-            </div>
-            <div class="role-hint" id="student-role-hint"></div>
-          </div>
-          <button type="submit" class="login-btn">
-            <i class="fas fa-sign-in-alt"></i> Login to Dashboard
-          </button>
-          <p class="info-text">
-            Don't have access? <a href="#">Contact nivid.co.in</a>
-          </p>
-          <div class="copyright-notice">© by Nivid Informatics Pvt Ltd</div>
-        </form>
-      </div>
-
-      <!-- Teacher Form -->
-      <div id="teacher-form" style="display: none">
-        <h2 class="form-title">Welcome Back, Teacher!</h2>
-        <p class="form-subtitle">
-          Enter your credentials to access the teaching dashboard
-        </p>
-        <div class="error-message" id="teacher-error"></div>
-        <form method="post" action="/login" onsubmit="return validateForm(event, 'teacher')" novalidate>
-          <input type="hidden" name="user_type" value="teacher" />
-          <div class="form-group">
-            <label><i class="fas fa-user"></i> Full Name</label>
-            <input type="text" name="name" id="teacher-name" placeholder="Enter your full name (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-building"></i> College Name</label>
-            <input type="text" name="college" id="teacher-college" placeholder="Enter your college name (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-envelope"></i> Email Address</label>
-            <input type="email" name="email" id="teacher-email" placeholder="Enter your email address here (Required for new sessions)" />
-          </div>
-          <div class="form-group">
-            <label><i class="fas fa-key"></i> Activation Code</label>
-            <input type="text" name="activation_code" id="teacher-key" placeholder="e.g. jyotS260105-64HYE9NP" maxlength="21" required oninput="detectRole('teacher')" />
-            <div class="activation-hint">
-              🔑 <strong>Example:</strong> <code>jyotS260105-64HYE9NP</code> (20 characters)<br>
-              Returning users: only this field is required.
-            </div>
-            <div class="role-hint" id="teacher-role-hint"></div>
-          </div>
-          <button type="submit" class="login-btn">
-            <i class="fas fa-sign-in-alt"></i> Login to Dashboard
-          </button>
-          <p class="info-text">
-            Need assistance? <a href="#">Contact Support</a>
-          </p>
-          <div class="copyright-notice">© by Nivid Informatics Pvt Ltd</div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Your JavaScript remains completely unchanged
-    function detectRole(formType) {
-      const keyInput = document.getElementById(`${formType}-key`);
-      const hintDiv = document.getElementById(`${formType}-role-hint`);
-      const key = keyInput.value.trim();
-
-      keyInput.classList.remove('role-mismatch');
-      if (!key || key.length < 12) {
-        hintDiv.style.display = 'none';
+    keyInput.classList.remove("role-mismatch");
+    if (!key || key.length < 15) {
+        hintDiv.style.display = "none";
         return;
-      }
-      const parts = key.split('-');
-      if (parts.length !== 2 || parts[0].length !== 11 || parts[1].length !== 8) {
-        hintDiv.style.display = 'none';
-        return;
-      }
-      const roleCode = parts[0][4];
-      const detectedRole = roleCode === 'T' ? 'teacher' : roleCode === 'S' ? 'student' : null;
-      if (!detectedRole) {
-        hintDiv.style.display = 'none';
-        return;
-      }
-      hintDiv.className = `role-hint ${detectedRole}`;
-      hintDiv.innerHTML = `<i class="fas fa-${detectedRole === 'student' ? 'user-graduate' : 'chalkboard-teacher'}"></i>
-        This activation code is for a <strong>${detectedRole}</strong>.`;
-      hintDiv.style.display = 'block';
-      const isMismatch = (formType === 'student' && detectedRole === 'teacher') ||
-                         (formType === 'teacher' && detectedRole === 'student');
-      if (isMismatch) {
-        keyInput.classList.add('role-mismatch');
-      } else {
-        keyInput.classList.remove('role-mismatch');
-      }
     }
 
-    function switchLogin(type) {
-      const studentForm = document.getElementById("student-form");
-      const teacherForm = document.getElementById("teacher-form");
-      const toggleBtns = document.querySelectorAll(".toggle-btn");
+    const parts = key.split("-");
+    if (parts.length !== 2 || parts[0].length !== 14 || parts[1].length !== 8) {
+        hintDiv.style.display = "none";
+        return;
+    }
 
-      if (type === "student") {
-        studentForm.style.display = "block";
-        teacherForm.style.display = "none";
-        toggleBtns[0].classList.add("active");
-        toggleBtns[1].classList.remove("active");
-        document.getElementById("student-error").style.display = "none";
-        document.getElementById("teacher-error").style.display = "none";
-        document.getElementById("student-key").classList.remove('role-mismatch');
-        document.getElementById("teacher-key").classList.remove('role-mismatch');
-      } else {
-        studentForm.style.display = "none";
-        teacherForm.style.display = "block";
-        toggleBtns[0].classList.remove("active");
-        toggleBtns[1].classList.add("active");
-        document.getElementById("student-error").style.display = "none";
-        document.getElementById("teacher-error").style.display = "none";
-        document.getElementById("student-key").classList.remove('role-mismatch');
-        document.getElementById("teacher-key").classList.remove('role-mismatch');
+    // नवीन format: 7002STUS270317
+    //               [7] = role code
+    const roleCode = parts[0][7];
+    const detectedRole = roleCode === "T" ? "teacher" : roleCode === "S" ? "student" : null;
+
+    if (!detectedRole) {
+        hintDiv.style.display = "none";
+        return;
+    }
+
+    hintDiv.className = `role-hint ${detectedRole}`;
+    hintDiv.innerHTML = `<i class="fas fa-${detectedRole === "student" ? "user-graduate" : "chalkboard-teacher"}"></i>
+    This activation code is for a <strong>${detectedRole}</strong>.`;
+    hintDiv.style.display = "block";
+
+    const isMismatch =
+        (formType === "student" && detectedRole === "teacher") ||
+        (formType === "teacher" && detectedRole === "student");
+
+    if (isMismatch) {
+        keyInput.classList.add("role-mismatch");
+    } else {
+        keyInput.classList.remove("role-mismatch");
+    }
+}
+
+      function switchLogin(type) {
+        const studentForm = document.getElementById("student-form");
+        const teacherForm = document.getElementById("teacher-form");
+        const toggleBtns = document.querySelectorAll(".toggle-btn");
+
+        if (type === "student") {
+          studentForm.style.display = "block";
+          teacherForm.style.display = "none";
+          toggleBtns[0].classList.add("active");
+          toggleBtns[1].classList.remove("active");
+          document.getElementById("student-error").style.display = "none";
+          document.getElementById("teacher-error").style.display = "none";
+          document
+            .getElementById("student-key")
+            .classList.remove("role-mismatch");
+          document
+            .getElementById("teacher-key")
+            .classList.remove("role-mismatch");
+        } else {
+          studentForm.style.display = "none";
+          teacherForm.style.display = "block";
+          toggleBtns[0].classList.remove("active");
+          toggleBtns[1].classList.add("active");
+          document.getElementById("student-error").style.display = "none";
+          document.getElementById("teacher-error").style.display = "none";
+          document
+            .getElementById("student-key")
+            .classList.remove("role-mismatch");
+          document
+            .getElementById("teacher-key")
+            .classList.remove("role-mismatch");
+        }
       }
-    }
-     function isValidEmail(email) {
-      // Very basic but effective check - prevents nonsense, allows any domain
-      const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
-      return re.test(email.toLowerCase().trim());
-    }
-    function validateForm(event, role) {
-      event.preventDefault();
-      const prefix = role;
-      const name = document.getElementById(`${prefix}-name`).value.trim();
-      const college = document.getElementById(`${prefix}-college`).value.trim();
-      const email = document.getElementById(`${prefix}-email`).value.trim();
-      const key = document.getElementById(`${prefix}-key`).value.trim();
-      const errorMsg = document.getElementById(`${prefix}-error`);
-      errorMsg.style.display = "none";
+      function isValidEmail(email) {
+        // Very basic but effective check - prevents nonsense, allows any domain
+        const re =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+        return re.test(email.toLowerCase().trim());
+      }
+      // ✅ validateForm मध्ये pattern बदला
+function validateForm(event, role) {
+    event.preventDefault();
+    const prefix = role;
+    const name = document.getElementById(`${prefix}-name`).value.trim();
+    const college = document.getElementById(`${prefix}-college`).value.trim();
+    const email = document.getElementById(`${prefix}-email`).value.trim();
+    const key = document.getElementById(`${prefix}-key`).value.trim();
+    const errorMsg = document.getElementById(`${prefix}-error`);
+    errorMsg.style.display = "none";
 
-      if (key && !name && !college && !email) {
-        const newKeyPattern = /^[a-z]{4}[ST]\d{6}-[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/;
+    // ✅ नवीन pattern — 23 chars, dash at position 14
+    // Format: 7002STUS270317-JXZFDJJV
+    // ✅ सगळं UPPERCASE expect करा आता
+const newKeyPattern = /^[A-Z0-9]{4}[A-Z]{3}[ST]\d{6}-[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/;
+
+    // Returning user — फक्त key आहे
+    if (key && !name && !college && !email) {
         if (!newKeyPattern.test(key)) {
-          showError(errorMsg, "Invalid key format. Expected: jyotS260105-64HYE9NP (20 chars, case-sensitive)");
-          return false;
+            showError(errorMsg, "Invalid key format. Expected: 7002STUS270317-JXZFDJJV (23 chars)");
+            return false;
         }
         event.target.submit();
         return true;
-      }
+    }
 
-      if (!name || !college || !email || !key) {
+    // First time — सगळे fields required
+    if (!name || !college || !email || !key) {
         showError(errorMsg, "All fields are required for first-time login.");
         return false;
-      }
-      if (!isValidEmail(email)) {
-        showError(errorMsg, "Please enter a valid email address (e.g. name@college.edu.in)");
+    }
+    if (!isValidEmail(email)) {
+        showError(errorMsg, "Please enter a valid email address");
         return false;
-      }
-
-      const newKeyPattern = /^[a-z]{2,5}\.?[a-z]{0,4}[ST]\d{6}-[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/;;
-      if (!newKeyPattern.test(key)) {
-        showError(errorMsg, "Invalid key format. Example: jyotS260105-64HYE9NP");
+    }
+    if (!newKeyPattern.test(key)) {
+        showError(errorMsg, "Invalid key format. Expected: 7002STUS270317-JXZFDJJV (23 chars)");
         return false;
-      }
+    }
 
-      const roleCode = key[4];
-      const expectedRole = roleCode === 'T' ? 'teacher' : 'student';
-      if (role !== expectedRole) {
+    // Role check — position [7] वर role code
+    const roleCode = key[7];
+    const expectedRole = roleCode === "T" ? "teacher" : "student";
+    if (role !== expectedRole) {
         showError(errorMsg, `❌ Role mismatch! This key is for a ${expectedRole}. Use the ${expectedRole} login panel.`);
         return false;
-      }
-
-      event.target.submit();
-      return true;
     }
 
-    function showError(element, message) {
-      element.textContent = message;
-      element.style.display = "block";
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    event.target.submit();
+    return true;
+}
 
-    window.addEventListener("pageshow", function (event) {
-      if (event.persisted) {
-        location.reload();
+      function showError(element, message) {
+        element.textContent = message;
+        element.style.display = "block";
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-    });
-  </script>
-</body>
+
+      window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+          location.reload();
+        }
+      });
+    </script>
+  </body>
 </html>
